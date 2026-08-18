@@ -14,7 +14,7 @@ El sistema permitirá:
 
 1. Registrar padres, tutores o responsables.
 2. Dar de alta alumnos asociados a un responsable.
-3. Registrar choferes.
+3. Registrar conductores.
 4. Registrar vehículos.
 5. Registrar y consultar horarios.
 6. Registrar y consultar pagos.
@@ -30,7 +30,7 @@ Las principales colecciones propuestas son:
 
 * `responsables`
 * `alumnos`
-* `choferes`
+* `conductores`
 * `vehiculos`
 * `pagos`
 
@@ -96,9 +96,9 @@ El horario se encuentra embebido dentro del documento del alumno porque está di
 
 ---
 
-## Colección `choferes`
+## Colección `conductores`
 
-La colección `choferes` almacenará los datos de los conductores que prestan el servicio de transporte escolar.
+La colección `conductores` almacenará los datos de los conductores que prestan el servicio de transporte escolar.
 
 ### Ejemplo de documento
 
@@ -119,7 +119,7 @@ La colección `choferes` almacenará los datos de los conductores que prestan el
 
 Los datos de la licencia se encuentran embebidos porque pertenecen directamente al chofer y se espera que sean consultados junto con su información.
 
-El campo `estado` permite indicar si el chofer se encuentra actualmente habilitado para prestar el servicio.
+El campo `estado` permite indicar si el conductor se encuentra actualmente habilitado para prestar el servicio.
 
 ---
 
