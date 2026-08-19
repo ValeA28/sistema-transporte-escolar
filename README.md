@@ -2,7 +2,7 @@
 
 ## 1. Descripción del proyecto
 
-El proyecto consiste en el diseño de un sistema de gestión para un servicio de transporte escolar. El sistema busca centralizar la información básica de alumnos, responsables, choferes, vehículos, horarios y pagos.
+El proyecto consiste en el diseño de un sistema de gestión para un servicio de transporte escolar. El sistema busca centralizar la información básica de alumnos, responsables, conductores, vehículos, horarios y pagos.
 
 Actualmente, este tipo de servicios suele realizarse de forma manual o mediante mensajes, lo que puede generar desorden, pérdida de información y dificultades para el control de pagos y horarios.
 
@@ -18,7 +18,7 @@ El sistema permitirá:
 4. Registrar vehículos.
 5. Registrar y consultar horarios.
 6. Registrar y consultar pagos.
-7. Consultar información general del servicio, como alumnos activos, responsables, pagos pendientes, choferes y vehículos disponibles.
+7. Consultar información general del servicio, como alumnos activos, responsables, pagos pendientes, conductores y vehículos disponibles.
 
 ---
 
