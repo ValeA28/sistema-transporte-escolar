@@ -249,3 +249,258 @@ Estos patrones de acceso influyen en la forma en que se organizaron los document
 De la misma manera, los pagos se mantienen en una colección independiente porque un alumno puede tener muchos pagos a lo largo del tiempo. Esto permite consultar el historial completo de pagos sin tener que modificar o hacer crecer constantemente el documento del alumno.
 
 De esta manera, la estructura propuesta busca que las consultas más habituales sean sencillas y que la información que puede crecer o modificarse de forma independiente no tenga que repetirse en diferentes documentos.
+
+
+
+
+
+
+---
+
+## Implementación y pruebas - Fase 2
+
+En esta fase se implementó el modelo diseñado anteriormente utilizando MongoDB. Se creó la base de datos `sistema-transporte-escolar` y las colecciones `alumnos`, `responsables`, `conductores`, `vehiculos` y `pagos`.
+
+También se cargaron datos iniciales en formato JSON y se desarrollaron consultas MQL para realizar búsquedas, actualizaciones y eliminaciones sobre la información del sistema.
+
+### Pruebas de Consultas (MQL)
+
+Las siguientes consultas representan diferentes necesidades del sistema de gestión de transporte escolar.
+
+### Consulta 1 - Coincidencia exacta
+
+**Problema de negocio:**
+
+Permite consultar los pagos registrados para un responsable específico. Esto facilita el control de los pagos realizados por cada familia.
+
+**Código MQL:**
+
+```javascript
+db.pagos.find({
+  responsable_id: "RES001"
+})
+```
+
+Esta consulta busca los documentos cuyo `responsable_id` coincida exactamente con `RES001`.
+
+**Resultado de la ejecución:**
+
+<img width="453" height="623" alt="Captura de pantalla 2026-09-21 195809" src="https://github.com/user-attachments/assets/b9c32358-4288-4f1b-a569-429f085292d5" />
+
+
+---
+
+### Consulta 2 - Operador de comparación
+
+**Problema de negocio:**
+
+Permite consultar los pagos cuyo monto sea superior a $85.000. Esto puede ser útil para analizar los pagos de mayor importe.
+
+**Código MQL:**
+
+```javascript
+db.pagos.find({
+  monto: {
+    $gt: 85000
+  }
+})
+```
+
+El operador `$gt` permite buscar valores mayores que el monto indicado.
+
+**Resultado de la ejecución:**
+
+<img width="343" height="690" alt="Captura de pantalla 2026-09-21 193302" src="https://github.com/user-attachments/assets/2599f481-d655-4eaf-9b3b-ea836cd825c5" />
+<img width="328" height="837" alt="Captura de pantalla 2026-09-21 193332" src="https://github.com/user-attachments/assets/7111dff5-6df2-4729-88d5-141348866d0e" />
+<img width="297" height="237" alt="Captura de pantalla 2026-09-21 193341" src="https://github.com/user-attachments/assets/99972ace-878b-4ea3-a19f-2b1213503951" />
+
+
+---
+
+### Consulta 3 - Notación de punto (Dot Notation)
+
+**Problema de negocio:**
+
+Permite consultar qué alumnos tienen un determinado horario de entrada, facilitando la organización de los recorridos del transporte escolar.
+
+**Código MQL:**
+
+```javascript
+db.alumnos.find({
+  "horario.entrada": "07:30"
+})
+```
+
+En esta consulta se utiliza la notación de punto para acceder al campo `entrada`, que se encuentra dentro del objeto `horario`.
+
+**Resultado de la ejecución:**
+
+<img width="696" height="817" alt="Captura de pantalla 2026-09-21 192103" src="https://github.com/user-attachments/assets/fc07fa18-5594-446a-8184-78f753fe814d" />
+<img width="378" height="771" alt="Captura de pantalla 2026-09-21 192413" src="https://github.com/user-attachments/assets/f1440040-5b28-4250-9b25-6bd45b7cf9be" />
+<img width="785" height="807" alt="Captura de pantalla 2026-09-21 192428" src="https://github.com/user-attachments/assets/581ad7df-4741-45f7-b2c3-e01d09b0e643" />
+<img width="342" height="601" alt="Captura de pantalla 2026-09-21 192440" src="https://github.com/user-attachments/assets/fbc39034-006f-4e21-9969-cb462b975557" />
+
+
+---
+
+### Consulta 4 - Proyección de campos
+
+**Problema de negocio:**
+
+Permite consultar información específica de los conductores sin mostrar todos los datos almacenados. En este caso se muestran solamente el nombre, apellido, teléfono y estado.
+
+**Código MQL:**
+
+```javascript
+db.conductores.find(
+  {},
+  {
+    _id: 0,
+    nombre: 1,
+    apellido: 1,
+    telefono: 1,
+    estado: 1
+  }
+)
+```
+
+La proyección permite seleccionar los campos que se desean mostrar. Se excluye explícitamente `_id` utilizando `_id: 0`.
+
+**Resultado de la ejecución:**
+
+<img width="338" height="842" alt="Captura de pantalla 2026-09-21 213038" src="https://github.com/user-attachments/assets/36737607-9052-4a16-844d-a412fc6e48da" />
+<img width="277" height="718" alt="Captura de pantalla 2026-09-21 213311" src="https://github.com/user-attachments/assets/4ce08d8e-5ea9-45b8-998e-da3bb74f2204" />
+<img width="276" height="542" alt="Captura de pantalla 2026-09-21 213341" src="https://github.com/user-attachments/assets/81922356-613b-4074-a7fd-67b000211b18" />
+
+
+---
+
+### Consulta 5 - Filtrado dentro de un arreglo con `$elemMatch`
+
+**Problema de negocio:**
+
+Permite consultar los alumnos que tienen entre sus personas autorizadas a una persona cuyo parentesco sea abuelo.
+
+**Código MQL:**
+
+```javascript
+db.alumnos.find({
+  personas_autorizadas: {
+    $elemMatch: {
+      parentesco: "Abuelo"
+    }
+  }
+})
+```
+
+El operador `$elemMatch` permite buscar dentro del arreglo `personas_autorizadas` un elemento que cumpla con la condición indicada.
+
+**Resultado de la ejecución:**
+
+<img width="360" height="778" alt="Captura de pantalla 2026-09-22 001133" src="https://github.com/user-attachments/assets/a07bcf04-db94-4afb-bc52-1256d79355b8" />
+<img width="363" height="807" alt="Captura de pantalla 2026-09-22 001210" src="https://github.com/user-attachments/assets/9829efd7-51a7-4a8e-ad0d-06aaf3746b3b" />
+
+
+---
+
+## Actualizaciones y eliminación
+
+Además de las consultas de lectura, se realizaron tres operaciones de modificación y eliminación.
+
+### Operación 1 - Actualización con `$set`
+
+**Problema de negocio:**
+
+Permite actualizar información de un alumno y agregar un dato adicional para situaciones de emergencia.
+
+En este caso se modificó la observación del alumno `ALU007` y se agregó la propiedad `contactoEmergencia`.
+
+**Código MQL:**
+
+```javascript
+db.alumnos.updateOne(
+  { _id: "ALU007" },
+  {
+    $set: {
+      observaciones: "Debe esperar dentro del establecimiento hasta ser retirada por una persona autorizada.",
+      contactoEmergencia: "2634559999"
+    }
+  }
+)
+```
+
+El operador `$set` permite modificar un campo existente y también agregar una nueva propiedad si esta no existe.
+
+**Resultado de la ejecución:**
+
+<img width="1116" height="485" alt="Captura de pantalla 2026-09-22 012507" src="https://github.com/user-attachments/assets/ac859cae-ccb0-406f-800b-a3ca96a380bd" />
+<img width="913" height="247" alt="Captura de pantalla 2026-09-22 012651" src="https://github.com/user-attachments/assets/5301cea9-ecb1-4748-ad99-57b49ffdccab" />
+
+
+---
+
+### Operación 2 - Incremento con `$inc`
+
+**Problema de negocio:**
+
+Permite llevar un contador de los viajes realizados por un vehículo. Cada vez que se registra un nuevo viaje, el contador puede incrementarse.
+
+En este caso se incrementó en 1 la cantidad de viajes realizados por el vehículo `VEH001`.
+
+**Código MQL:**
+
+```javascript
+db.vehiculos.updateOne(
+  { _id: "VEH001" },
+  {
+    $inc: {
+      viajesRealizados: 1
+    }
+  }
+)
+```
+
+El operador `$inc` incrementa el valor numérico indicado. Como `viajesRealizados` no existía inicialmente, MongoDB creó la propiedad con valor `1`.
+
+**Resultado de la ejecución:**
+
+<img width="396" height="458" alt="Captura de pantalla 2026-09-22 035726" src="https://github.com/user-attachments/assets/6da3ebe4-40af-4322-a67f-11a33177f960" />
+<img width="245" height="177" alt="Captura de pantalla 2026-09-22 035748" src="https://github.com/user-attachments/assets/858d4f42-667b-449a-b08e-7c85ce66aa2c" />
+
+
+---
+
+### Operación 3 - Eliminación segura con `deleteOne`
+
+**Problema de negocio:**
+
+Permite eliminar un registro específico que ya no debe formar parte de la colección, utilizando un criterio de filtrado estricto para evitar eliminar otros documentos.
+
+Para realizar esta prueba se utilizó temporalmente el vehículo `VEH011`, marcado como `"Dado de baja"`.
+
+**Código MQL:**
+
+```javascript
+db.vehiculos.deleteOne({
+  _id: "VEH011",
+  estado: "Dado de baja"
+})
+```
+
+La eliminación utiliza dos condiciones: el identificador del vehículo y su estado. De esta manera, solamente se elimina el documento que cumple ambas condiciones.
+
+**Resultado de la ejecución:**
+
+<img width="312" height="532" alt="Captura de pantalla 2026-09-22 002630" src="https://github.com/user-attachments/assets/a595b6a4-0abd-4967-8d67-91b5308bd23b" />
+<img width="313" height="246" alt="Captura de pantalla 2026-09-22 040503" src="https://github.com/user-attachments/assets/99d8056b-3a32-4e1d-82ef-f3725ce78d0e" />
+
+
+---
+
+## Conclusión de las pruebas
+
+Las consultas y operaciones realizadas permitieron comprobar el funcionamiento de MongoDB sobre el modelo diseñado para el sistema de transporte escolar.
+
+Se utilizaron consultas de filtrado, operadores de comparación, notación de punto, proyecciones y búsquedas dentro de arreglos. También se realizaron operaciones de actualización y eliminación para comprobar el manejo de los datos.
+
+Las pruebas permitieron verificar que la información puede consultarse y modificarse de acuerdo con las necesidades del sistema, aprovechando las características del modelo orientado a documentos.
