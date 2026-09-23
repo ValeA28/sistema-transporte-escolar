@@ -1,0 +1,96 @@
+[
+  {
+    "_id": "PAG001",
+    "responsable_id": "RES001",
+    "alumno_id": "ALU001",
+    "periodo": "Agosto 2026",
+    "monto": 85000,
+    "fechaPago": "2026-08-05",
+    "metodoPago": "Transferencia",
+    "estado": "Pagado"
+  },
+  {
+    "_id": "PAG002",
+    "responsable_id": "RES001",
+    "alumno_id": "ALU001",
+    "periodo": "Septiembre 2026",
+    "monto": 90000,
+    "fechaPago": "2026-09-03",
+    "metodoPago": "Transferencia",
+    "estado": "Pagado"
+  },
+  {
+    "_id": "PAG003",
+    "responsable_id": "RES002",
+    "alumno_id": "ALU002",
+    "periodo": "Agosto 2026",
+    "monto": 85000,
+    "fechaPago": "2026-08-07",
+    "metodoPago": "Efectivo",
+    "estado": "Pagado"
+  },
+  {
+    "_id": "PAG004",
+    "responsable_id": "RES002",
+    "alumno_id": "ALU002",
+    "periodo": "Septiembre 2026",
+    "monto": 90000,
+    "estado": "Pendiente"
+  },
+  {
+    "_id": "PAG005",
+    "responsable_id": "RES003",
+    "alumno_id": "ALU003",
+    "periodo": "Agosto 2026",
+    "monto": 85000,
+    "fechaPago": "2026-08-04",
+    "metodoPago": "Transferencia",
+    "estado": "Pagado"
+  },
+  {
+    "_id": "PAG006",
+    "responsable_id": "RES004",
+    "alumno_id": "ALU004",
+    "periodo": "Agosto 2026",
+    "monto": 85000,
+    "fechaPago": "2026-08-06",
+    "metodoPago": "Efectivo",
+    "estado": "Pagado"
+  },
+  {
+    "_id": "PAG007",
+    "responsable_id": "RES004",
+    "alumno_id": "ALU004",
+    "periodo": "Septiembre 2026",
+    "monto": 90000,
+    "estado": "Pendiente"
+  },
+  {
+    "_id": "PAG008",
+    "responsable_id": "RES005",
+    "alumno_id": "ALU005",
+    "periodo": "Septiembre 2026",
+    "monto": 90000,
+    "fechaPago": "2026-09-02",
+    "metodoPago": "Transferencia",
+    "estado": "Pagado"
+  },
+  {
+    "_id": "PAG009",
+    "responsable_id": "RES006",
+    "alumno_id": "ALU006",
+    "periodo": "Septiembre 2026",
+    "monto": 90000,
+    "fechaPago": "2026-09-01",
+    "metodoPago": "Transferencia",
+    "estado": "Pagado"
+  },
+  {
+    "_id": "PAG010",
+    "responsable_id": "RES007",
+    "alumno_id": "ALU007",
+    "periodo": "Septiembre 2026",
+    "monto": 90000,
+    "estado": "Pendiente"
+  }
+]

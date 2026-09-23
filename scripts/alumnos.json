@@ -1,0 +1,274 @@
+[
+  {
+    "_id": "ALU001",
+    "nombre": "Martina",
+    "apellido": "Gómez",
+    "fechaNacimiento": "2014-05-12",
+    "responsable_id": "RES001",
+    "personas_autorizadas": [
+      {
+        "nombre": "Laura",
+        "apellido": "Rodríguez",
+        "parentesco": "Madre",
+        "telefono": "2634551001"
+      },
+      {
+        "nombre": "Javier",
+        "apellido": "Gómez",
+        "parentesco": "Padre",
+        "telefono": "2634551101"
+      }
+    ],
+    "horario": {
+      "entrada": "07:30",
+      "regreso": "13:00"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "ALU002",
+    "nombre": "Tomás",
+    "apellido": "Fernández",
+    "fechaNacimiento": "2013-08-21",
+    "responsable_id": "RES002",
+    "personas_autorizadas": [
+      {
+        "nombre": "Marcos",
+        "apellido": "Fernández",
+        "parentesco": "Padre",
+        "telefono": "2635551002"
+      },
+      {
+        "nombre": "Verónica",
+        "apellido": "Martínez",
+        "parentesco": "Madre",
+        "telefono": "2615511502"
+      }
+    ],
+    "horario": {
+      "entrada": "07:45",
+      "regreso": "13:10"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "ALU003",
+    "nombre": "Sofía",
+    "apellido": "Martínez López",
+    "fechaNacimiento": "2015-02-14",
+    "responsable_id": "RES003",
+    "personas_autorizadas": [
+      {
+        "nombre": "Carolina",
+        "apellido": "López",
+        "parentesco": "Madre",
+        "telefono": "2634551003"
+      },
+      {
+        "nombre": "Pablo",
+        "apellido": "Martínez",
+        "parentesco": "Padre",
+        "telefono": "2634551103"
+      }
+    ],
+    "horario": {
+      "entrada": "08:00",
+      "regreso": "13:15"
+    },
+    "estado": "Activo",
+    "observaciones": "Los martes y jueves, a la vuelta, debe ser dejada en el domicilio indicado.",
+    "direcciones_servicio": [
+      {
+        "tipo": "Ida",
+        "direccion": {
+          "calle": "Rivadavia",
+          "numero": 518,
+          "localidad": "Palmira"
+        }
+      },
+      {
+        "tipo": "Vuelta",
+        "dias": [
+          "Martes",
+          "Jueves"
+        ],
+        "direccion": {
+          "calle": "Belgrano",
+          "numero": 320,
+          "localidad": "Palmira"
+        }
+      }
+    ]
+  },
+  {
+    "_id": "ALU004",
+    "nombre": "Mateo",
+    "apellido": "Rodríguez",
+    "fechaNacimiento": "2012-11-03",
+    "responsable_id": "RES004",
+    "personas_autorizadas": [
+      {
+        "nombre": "Diego",
+        "apellido": "Rodríguez",
+        "parentesco": "Padre",
+        "telefono": "2615551004"
+      },
+      {
+        "nombre": "Mariana",
+        "apellido": "Sánchez",
+        "parentesco": "Madre",
+        "telefono": "2634551104"
+      }
+    ],
+    "horario": {
+      "entrada": "07:30",
+      "regreso": "12:45"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "ALU005",
+    "nombre": "Valentina",
+    "apellido": "Pérez",
+    "fechaNacimiento": "2014-09-17",
+    "responsable_id": "RES005",
+    "personas_autorizadas": [
+      {
+        "nombre": "Sofía",
+        "apellido": "García",
+        "parentesco": "Madre",
+        "telefono": "2634551005"
+      },
+      {
+        "nombre": "Lucas",
+        "apellido": "Pérez",
+        "parentesco": "Padre",
+        "telefono": "2634551105"
+      }
+    ],
+    "horario": {
+      "entrada": "07:45",
+      "regreso": "13:00"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "ALU006",
+    "nombre": "Benjamín",
+    "apellido": "López",
+    "fechaNacimiento": "2013-06-25",
+    "responsable_id": "RES006",
+    "personas_autorizadas": [
+      {
+        "nombre": "Andrés",
+        "apellido": "López",
+        "parentesco": "Padre",
+        "telefono": "2634551006"
+      },
+      {
+        "nombre": "Gabriela",
+        "apellido": "Fernández",
+        "parentesco": "Madre",
+        "telefono": "2634551106"
+      }
+    ],
+    "horario": {
+      "entrada": "08:00",
+      "regreso": "13:20"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "ALU007",
+    "nombre": "Emma",
+    "apellido": "Sánchez",
+    "fechaNacimiento": "2015-01-30",
+    "responsable_id": "RES007",
+    "personas_autorizadas": [
+      {
+        "nombre": "Valeria",
+        "apellido": "Sánchez",
+        "parentesco": "Madre",
+        "telefono": "2634551007"
+      },
+      {
+        "nombre": "Nicolás",
+        "apellido": "Sánchez",
+        "parentesco": "Padre",
+        "telefono": "2634551107"
+      }
+    ],
+    "horario": {
+      "entrada": "07:30",
+      "regreso": "12:50"
+    },
+    "estado": "Activo",
+    "observaciones": "Debe esperar dentro del establecimiento hasta ser retirada."
+  },
+  {
+    "_id": "ALU008",
+    "nombre": "Joaquín",
+    "apellido": "Torres",
+    "fechaNacimiento": "2012-04-18",
+    "responsable_id": "RES008",
+    "personas_autorizadas": [
+      {
+        "nombre": "Fernando",
+        "apellido": "Díaz",
+        "parentesco": "Abuelo",
+        "telefono": "2634551008"
+      },
+      {
+        "nombre": "Elena",
+        "apellido": "Gutiérrez",
+        "parentesco": "Abuela",
+        "telefono": "2634551201"
+      }
+    ],
+    "horario": {
+      "entrada": "07:45",
+      "regreso": "13:00"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "ALU009",
+    "nombre": "Camila",
+    "apellido": "Romero",
+    "fechaNacimiento": "2014-12-09",
+    "responsable_id": "RES009",
+    "personas_autorizadas": [
+      {
+        "nombre": "Natalia",
+        "apellido": "Pérez",
+        "parentesco": "Tía",
+        "telefono": "2634551009"
+      }
+    ],
+    "horario": {
+      "entrada": "08:00",
+      "regreso": "13:10"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "ALU010",
+    "nombre": "Franco",
+    "apellido": "Castro",
+    "fechaNacimiento": "2013-10-27",
+    "responsable_id": "RES010",
+    "personas_autorizadas": [
+      {
+        "nombre": "Gabriel",
+        "apellido": "García",
+        "parentesco": "Abuelo",
+        "telefono": "2634551010"
+      }
+    ],
+    "horario": {
+      "entrada": "07:30",
+      "regreso": "12:55"
+    },
+    "estado": "Activo"
+  }
+]

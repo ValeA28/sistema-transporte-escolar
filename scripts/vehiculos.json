@@ -1,0 +1,82 @@
+[
+  {
+    "_id": "VEH001",
+    "marca": "Mercedes-Benz",
+    "modelo": "Sprinter",
+    "patente": "AB123CD",
+    "capacidad": 19,
+    "estado": "Activo"
+  },
+  {
+    "_id": "VEH002",
+    "marca": "Mercedes-Benz",
+    "modelo": "Sprinter",
+    "patente": "AC456EF",
+    "capacidad": 15,
+    "estado": "Activo"
+  },
+  {
+    "_id": "VEH003",
+    "marca": "Renault",
+    "modelo": "Master",
+    "patente": "AD789GH",
+    "capacidad": 16,
+    "estado": "Activo"
+  },
+  {
+    "_id": "VEH004",
+    "marca": "Iveco",
+    "modelo": "Daily",
+    "patente": "AE234JK",
+    "capacidad": 19,
+    "estado": "Activo"
+  },
+  {
+    "_id": "VEH005",
+    "marca": "Mercedes-Benz",
+    "modelo": "Sprinter",
+    "patente": "AF567LM",
+    "capacidad": 20,
+    "estado": "Activo"
+  },
+  {
+    "_id": "VEH006",
+    "marca": "Renault",
+    "modelo": "Master",
+    "patente": "AG890NP",
+    "capacidad": 15,
+    "estado": "Activo"
+  },
+  {
+    "_id": "VEH007",
+    "marca": "Iveco",
+    "modelo": "Daily",
+    "patente": "AH123QR",
+    "capacidad": 18,
+    "estado": "Activo"
+  },
+  {
+    "_id": "VEH008",
+    "marca": "Mercedes-Benz",
+    "modelo": "Sprinter",
+    "patente": "AI456ST",
+    "capacidad": 19,
+    "estado": "Activo"
+  },
+  {
+    "_id": "VEH009",
+    "marca": "Renault",
+    "modelo": "Master",
+    "patente": "AJ789UV",
+    "capacidad": 17,
+    "estado": "Activo"
+  },
+  {
+    "_id": "VEH010",
+    "marca": "Iveco",
+    "modelo": "Daily",
+    "patente": "AK234WX",
+    "capacidad": 20,
+    "estado": "Activo"
+  }
+]

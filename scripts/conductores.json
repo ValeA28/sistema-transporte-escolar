@@ -1,0 +1,122 @@
+[
+  {
+    "_id": "CHO001",
+    "nombre": "Carlos",
+    "apellido": "Pérez",
+    "dni": "28555111",
+    "telefono": "2635552001",
+    "licencia": {
+      "numero": "12345678",
+      "vencimiento": "2027-10-15"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "CHO002",
+    "nombre": "Ricardo",
+    "apellido": "González",
+    "dni": "30123456",
+    "telefono": "2635552002",
+    "licencia": {
+      "numero": "23456789",
+      "vencimiento": "2028-03-20"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "CHO003",
+    "nombre": "Marcelo",
+    "apellido": "Ramírez",
+    "dni": "27894561",
+    "telefono": "2635552003",
+    "licencia": {
+      "numero": "34567890",
+      "vencimiento": "2027-08-10"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "CHO004",
+    "nombre": "Daniel",
+    "apellido": "Moreno",
+    "dni": "32456789",
+    "telefono": "2635552004",
+    "licencia": {
+      "numero": "45678901",
+      "vencimiento": "2029-01-25"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "CHO005",
+    "nombre": "Sergio",
+    "apellido": "Ruiz",
+    "dni": "29123457",
+    "telefono": "2635552005",
+    "licencia": {
+      "numero": "56789012",
+      "vencimiento": "2027-12-05"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "CHO006",
+    "nombre": "Héctor",
+    "apellido": "Vargas",
+    "dni": "26789123",
+    "telefono": "2635552006",
+    "licencia": {
+      "numero": "67890123",
+      "vencimiento": "2026-11-18"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "CHO007",
+    "nombre": "Fernando",
+    "apellido": "Torres",
+    "dni": "31234567",
+    "telefono": "2635552007",
+    "licencia": {
+      "numero": "78901234",
+      "vencimiento": "2028-06-30"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "CHO008",
+    "nombre": "Gustavo",
+    "apellido": "Molina",
+    "dni": "29876543",
+    "telefono": "2635552008",
+    "licencia": {
+      "numero": "89012345",
+      "vencimiento": "2027-04-12"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "CHO009",
+    "nombre": "Roberto",
+    "apellido": "Sosa",
+    "dni": "27654321",
+    "telefono": "2635552009",
+    "licencia": {
+      "numero": "90123456",
+      "vencimiento": "2028-09-22"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "CHO010",
+    "nombre": "Miguel",
+    "apellido": "Navarro",
+    "dni": "33567891",
+    "telefono": "2635552010",
+    "licencia": {
+      "numero": "01234567",
+      "vencimiento": "2029-02-14"
+    },
+    "estado": "Activo"
+  }
+]

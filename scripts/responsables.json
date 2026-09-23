@@ -1,0 +1,254 @@
+[
+  {
+    "_id": "RES001",
+    "nombre": "Laura",
+    "apellido": "Rodríguez",
+    "dni": "30123456",
+    "telefono": "2634551001",
+    "gmail": "laurarodriguez@gmail.com",
+    "direccion": {
+      "calle": "San Martín",
+      "numero": 125,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES002",
+    "nombre": "Marcos",
+    "apellido": "Fernández",
+    "dni": "28456789",
+    "telefono": "2635551002",
+    "gmail": "marcosfernandez@gmail.com",
+    "direccion": {
+      "calle": "Belgrano",
+      "numero": 342,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES003",
+    "nombre": "Carolina",
+    "apellido": "López",
+    "dni": "32789123",
+    "telefono": "2634551003",
+    "gmail": "carolinalopez@gmail.com",
+    "direccion": {
+      "calle": "Rivadavia",
+      "numero": 518,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES004",
+    "nombre": "Diego",
+    "apellido": "Rodríguez",
+    "dni": "29654321",
+    "telefono": "2615551004",
+    "gmail": "diegorodriguez@gmail.com",
+    "direccion": {
+      "calle": "España",
+      "numero": 276,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES005",
+    "nombre": "Sofía",
+    "apellido": "García",
+    "dni": "35123478",
+    "telefono": "2634551005",
+    "gmail": "sofiagarcia@gmail.com",
+    "direccion": {
+      "calle": "Sarmiento",
+      "numero": 631,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES006",
+    "nombre": "Andrés",
+    "apellido": "López",
+    "dni": "27345678",
+    "telefono": "2634551006",
+    "gmail": "andreslopez@gmail.com",
+    "direccion": {
+      "calle": "Alem",
+      "numero": 189,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES007",
+    "nombre": "Valeria",
+    "apellido": "Sánchez",
+    "dni": "33456789",
+    "telefono": "2634551007",
+    "gmail": "valeriasanchez@gmail.com",
+    "direccion": {
+      "calle": "Mitre",
+      "numero": 427,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES008",
+    "nombre": "Fernando",
+    "apellido": "Díaz",
+    "dni": "31234567",
+    "telefono": "2634551008",
+    "gmail": "fernandodiaz@gmail.com",
+    "direccion": {
+      "calle": "9 de Julio",
+      "numero": 305,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES009",
+    "nombre": "Natalia",
+    "apellido": "Pérez",
+    "dni": "36789124",
+    "telefono": "2634551009",
+    "gmail": "nataliaperez@gmail.com",
+    "direccion": {
+      "calle": "Colón",
+      "numero": 714,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES010",
+    "nombre": "Gabriel",
+    "apellido": "García",
+    "dni": "30567891",
+    "telefono": "2634551010",
+    "gmail": "gabrielgarcia@gmail.com",
+    "direccion": {
+      "calle": "Libertador",
+      "numero": 456,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES011",
+    "nombre": "Javier",
+    "apellido": "Gómez",
+    "dni": "28654321",
+    "telefono": "2634551101",
+    "gmail": "javiergomez@gmail.com",
+    "direccion": {
+      "calle": "San Martín",
+      "numero": 125,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES012",
+    "nombre": "Verónica",
+    "apellido": "Martínez",
+    "dni": "31987654",
+    "telefono": "2615511502",
+    "gmail": "veronicamartinez@gmail.com",
+    "direccion": {
+      "calle": "Belgrano",
+      "numero": 342,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES013",
+    "nombre": "Pablo",
+    "apellido": "Martínez",
+    "dni": "29876541",
+    "telefono": "2634551103",
+    "gmail": "pablomartinez@gmail.com",
+    "direccion": {
+      "calle": "Belgrano",
+      "numero": 320,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES014",
+    "nombre": "Mariana",
+    "apellido": "Sánchez",
+    "dni": "32654178",
+    "telefono": "2634551104",
+    "gmail": "marianasanchez@gmail.com",
+    "direccion": {
+      "calle": "España",
+      "numero": 350,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES015",
+    "nombre": "Lucas",
+    "apellido": "Pérez",
+    "dni": "33451267",
+    "telefono": "2634551105",
+    "gmail": "lucasperez@gmail.com",
+    "direccion": {
+      "calle": "Sarmiento",
+      "numero": 631,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES016",
+    "nombre": "Gabriela",
+    "apellido": "Fernández",
+    "dni": "34125678",
+    "telefono": "2634551106",
+    "gmail": "gabrielafernandez@gmail.com",
+    "direccion": {
+      "calle": "Alem",
+      "numero": 250,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES017",
+    "nombre": "Nicolás",
+    "apellido": "Sánchez",
+    "dni": "31876543",
+    "telefono": "2634551107",
+    "gmail": "nicolassanchez@gmail.com",
+    "direccion": {
+      "calle": "Mitre",
+      "numero": 427,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  },
+  {
+    "_id": "RES018",
+    "nombre": "Elena",
+    "apellido": "Gutiérrez",
+    "dni": "25432109",
+    "telefono": "2634551201",
+    "gmail": "elenagutierrez@gmail.com",
+    "direccion": {
+      "calle": "9 de Julio",
+      "numero": 305,
+      "localidad": "Palmira"
+    },
+    "estado": "Activo"
+  }
+]
