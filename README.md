@@ -269,7 +269,6 @@ Las siguientes consultas representan diferentes necesidades del sistema de gesti
 
 ### Consulta 1 - Coincidencia exacta
 
-**Problema de negocio:**
 
 Permite consultar los pagos registrados para un responsable específico. Esto facilita el control de los pagos realizados por cada familia.
 
@@ -292,7 +291,6 @@ Esta consulta busca los documentos cuyo `responsable_id` coincida exactamente co
 
 ### Consulta 2 - Operador de comparación
 
-**Problema de negocio:**
 
 Permite consultar los pagos cuyo monto sea superior a $85.000. Esto puede ser útil para analizar los pagos de mayor importe.
 
@@ -319,7 +317,6 @@ El operador `$gt` permite buscar valores mayores que el monto indicado.
 
 ### Consulta 3 - Notación de punto (Dot Notation)
 
-**Problema de negocio:**
 
 Permite consultar qué alumnos tienen un determinado horario de entrada, facilitando la organización de los recorridos del transporte escolar.
 
@@ -345,7 +342,6 @@ En esta consulta se utiliza la notación de punto para acceder al campo `entrada
 
 ### Consulta 4 - Proyección de campos
 
-**Problema de negocio:**
 
 Permite consultar información específica de los conductores sin mostrar todos los datos almacenados. En este caso se muestran solamente el nombre, apellido, teléfono y estado.
 
@@ -377,7 +373,6 @@ La proyección permite seleccionar los campos que se desean mostrar. Se excluye 
 
 ### Consulta 5 - Filtrado dentro de un arreglo con `$elemMatch`
 
-**Problema de negocio:**
 
 Permite consultar los alumnos que tienen entre sus personas autorizadas a una persona cuyo parentesco sea abuelo.
 
@@ -409,7 +404,6 @@ Además de las consultas de lectura, se realizaron tres operaciones de modificac
 
 ### Operación 1 - Actualización con `$set`
 
-**Problema de negocio:**
 
 Permite actualizar información de un alumno y agregar un dato adicional para situaciones de emergencia.
 
@@ -441,7 +435,6 @@ El operador `$set` permite modificar un campo existente y también agregar una n
 
 ### Operación 2 - Incremento con `$inc`
 
-**Problema de negocio:**
 
 Permite llevar un contador de los viajes realizados por un vehículo. Cada vez que se registra un nuevo viaje, el contador puede incrementarse.
 
@@ -472,7 +465,6 @@ El operador `$inc` incrementa el valor numérico indicado. Como `viajesRealizado
 
 ### Operación 3 - Eliminación segura con `deleteOne`
 
-**Problema de negocio:**
 
 Permite eliminar un registro específico que ya no debe formar parte de la colección, utilizando un criterio de filtrado estricto para evitar eliminar otros documentos.
 
