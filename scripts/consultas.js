@@ -3,10 +3,6 @@
 // FASE 2 - IMPLEMENTACIÓN, SEMBRADO DE DATOS Y CONSULTAS MQL
 // ============================================================
 
-
-// Selecciona la base de datos del proyecto.
-// Todas las consultas y operaciones que se encuentran
-// debajo se ejecutarán sobre esta base de datos.
 use("sistema-transporte-escolar");
 
 
