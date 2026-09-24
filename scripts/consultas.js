@@ -1,9 +1,12 @@
 // ============================================================
 // SISTEMA DE GESTIÓN DE TRANSPORTE ESCOLAR
-// Consultas MQL - Fase 2
+// FASE 2 - IMPLEMENTACIÓN, SEMBRADO DE DATOS Y CONSULTAS MQL
 // ============================================================
 
+
 // Selecciona la base de datos del proyecto.
+// Todas las consultas y operaciones que se encuentran
+// debajo se ejecutarán sobre esta base de datos.
 use("sistema-transporte-escolar");
 
 
@@ -13,10 +16,19 @@ use("sistema-transporte-escolar");
 
 
 // ------------------------------------------------------------
-// CONSULTA 1 - Coincidencia exacta
+// CONSULTA 1 - COINCIDENCIA EXACTA
 // ------------------------------------------------------------
-// Busca los pagos correspondientes al responsable RES001.
-// Se utiliza una coincidencia exacta sobre responsable_id.
+
+// Problema de negocio:
+// El sistema necesita permitir consultar los pagos realizados
+// o registrados por un responsable determinado.
+//
+// En este caso se consulta al responsable RES001.
+// Se utiliza una coincidencia exacta sobre el campo
+// responsable_id.
+//
+// La consulta devuelve todos los documentos de la colección
+// pagos donde responsable_id sea exactamente "RES001".
 
 db.pagos.find({
   responsable_id: "RES001"
@@ -24,10 +36,21 @@ db.pagos.find({
 
 
 // ------------------------------------------------------------
-// CONSULTA 2 - Operador de comparación
+// CONSULTA 2 - OPERADOR DE COMPARACIÓN
 // ------------------------------------------------------------
-// Busca los pagos cuyo monto sea mayor a $85.000.
-// $gt significa "greater than" (mayor que).
+
+// Problema de negocio:
+// El sistema necesita identificar los pagos cuyo monto
+// sea superior a un determinado valor.
+//
+// Se utiliza el operador $gt, que significa "greater than"
+// o "mayor que".
+//
+// En este caso se buscan todos los pagos cuyo monto
+// sea mayor a 85000.
+//
+// Esto puede utilizarse para consultar pagos de meses
+// cuyo importe sea superior al valor establecido.
 
 db.pagos.find({
   monto: {
@@ -37,12 +60,21 @@ db.pagos.find({
 
 
 // ------------------------------------------------------------
-// CONSULTA 3 - Dot notation
+// CONSULTA 3 - NOTACIÓN DE PUNTO
 // ------------------------------------------------------------
-// Busca los alumnos cuyo horario de entrada sea exactamente
-// a las 07:30.
-// Se utiliza dot notation para acceder a entrada dentro
-// del objeto horario.
+
+// Problema de negocio:
+// El sistema necesita consultar los alumnos que tienen
+// un determinado horario de entrada.
+//
+// El campo "entrada" se encuentra dentro del objeto
+// "horario" del documento de cada alumno.
+//
+// Por eso se utiliza la notación de punto:
+// "horario.entrada"
+//
+// La consulta devuelve los alumnos cuyo horario de entrada
+// sea exactamente a las 07:30.
 
 db.alumnos.find({
   "horario.entrada": "07:30"
@@ -50,11 +82,24 @@ db.alumnos.find({
 
 
 // ------------------------------------------------------------
-// CONSULTA 4 - Proyección de campos
+// CONSULTA 4 - PROYECCIÓN
 // ------------------------------------------------------------
-// Consulta los conductores mostrando solamente nombre,
-// apellido, teléfono y estado.
-// Se excluye explícitamente el campo _id.
+
+// Problema de negocio:
+// El sistema necesita consultar información de los conductores
+// mostrando solamente los datos necesarios para la consulta.
+//
+// La proyección permite seleccionar qué campos queremos
+// visualizar en el resultado.
+//
+// El valor 1 indica que el campo debe incluirse.
+// El valor 0 indica que el campo debe excluirse.
+//
+// En este caso se excluye _id y se muestran solamente:
+// nombre, apellido, telefono y estado.
+//
+// De esta manera se evita mostrar información que no es
+// necesaria para esta consulta.
 
 db.conductores.find(
   {},
@@ -69,11 +114,21 @@ db.conductores.find(
 
 
 // ------------------------------------------------------------
-// CONSULTA 5 - Filtro dentro de un arreglo
+// CONSULTA 5 - FILTRADO DE ELEMENTOS DENTRO DE UN ARRAY
 // ------------------------------------------------------------
-// Busca los alumnos que tienen una persona autorizada
-// cuyo parentesco sea "Abuelo".
-// Se utiliza el operador $elemMatch.
+
+// Problema de negocio:
+// El sistema necesita consultar qué alumnos tienen registrada
+// una persona autorizada cuyo parentesco sea "Abuelo".
+//
+// El campo personas_autorizadas es un arreglo que puede contener
+// una o varias personas autorizadas.
+//
+// Se utiliza el operador $elemMatch para buscar dentro de ese
+// arreglo un elemento que cumpla con la condición indicada.
+//
+// En este caso se buscan elementos cuyo campo parentesco
+// sea igual a "Abuelo".
 
 db.alumnos.find({
   personas_autorizadas: {
@@ -85,15 +140,31 @@ db.alumnos.find({
 
 
 // ============================================================
-// PASO 4 - ACTUALIZACIONES Y ELIMINACIÓN
+// PASO 4 - OPERACIONES DE ESCRITURA
 // ============================================================
 
 
 // ------------------------------------------------------------
-// OPERACIÓN 1 - Actualización con $set
+// OPERACIÓN 1 - ACTUALIZACIÓN CON $set
 // ------------------------------------------------------------
-// Modifica la observación del alumno ALU007 y agrega
-// una nueva propiedad llamada contactoEmergencia.
+
+// Problema de negocio:
+// El sistema necesita permitir actualizar información
+// de un alumno y agregar nuevos datos cuando sea necesario.
+//
+// En este caso se modifica la información del alumno ALU007.
+//
+// Se actualiza el campo "observaciones" para indicar
+// una condición relacionada con el retiro del alumno.
+//
+// Además, se agrega un nuevo campo llamado
+// "contactoEmergencia".
+//
+// El operador $set permite modificar un campo existente
+// o crear un nuevo campo si todavía no existe.
+//
+// updateOne modifica solamente el primer documento que
+// coincide con el criterio de búsqueda.
 
 db.alumnos.updateOne(
   {
@@ -109,11 +180,25 @@ db.alumnos.updateOne(
 
 
 // ------------------------------------------------------------
-// OPERACIÓN 2 - Incremento con $inc
+// OPERACIÓN 2 - INCREMENTO CON $inc
 // ------------------------------------------------------------
-// Incrementa en 1 la cantidad de viajes realizados por
-// el vehículo VEH001.
-// Si viajesRealizados no existe, MongoDB lo crea con valor 1.
+
+// Problema de negocio:
+// El sistema necesita llevar un registro de la cantidad
+// de viajes realizados por cada vehículo.
+//
+// En este caso se utiliza el vehículo VEH001.
+//
+// El operador $inc permite incrementar o disminuir
+// un valor numérico.
+//
+// Se incrementa el campo "viajesRealizados" en 1.
+//
+// Si el campo todavía no existe en el documento,
+// MongoDB lo crea automáticamente con el valor indicado.
+//
+// Por lo tanto, después de ejecutar esta operación,
+// VEH001 tendrá viajesRealizados: 1.
 
 db.vehiculos.updateOne(
   {
@@ -128,15 +213,36 @@ db.vehiculos.updateOne(
 
 
 // ------------------------------------------------------------
-// OPERACIÓN 3 - Eliminación segura con deleteOne
+// OPERACIÓN 3 - ELIMINACIÓN SEGURA CON deleteOne
 // ------------------------------------------------------------
-// Elimina el vehículo de prueba VEH011 solamente si,
-// además de tener ese _id, su estado es "Dado de baja".
-// El criterio estricto evita eliminar otro vehículo.
 
-db.vehiculos.deleteOne(
-  {
-    _id: "VEH011",
-    estado: "Dado de baja"
-  }
-);
+// Problema de negocio:
+// El sistema debe permitir eliminar un vehículo que ya
+// no se encuentra disponible para prestar el servicio.
+//
+// Para realizar la prueba de eliminación se utilizó
+// temporalmente el vehículo VEH011, cuyo estado es
+// "Dado de baja".
+//
+// Se utiliza deleteOne para eliminar un único documento.
+//
+// La condición de búsqueda contiene DOS criterios:
+// 1. El _id debe ser exactamente "VEH011".
+// 2. El estado debe ser exactamente "Dado de baja".
+//
+// Esto permite realizar una eliminación específica y evita
+// eliminar accidentalmente otro vehículo.
+//
+// VEH011 fue utilizado únicamente como documento de prueba
+// para esta operación y no forma parte de los datos iniciales
+// de vehiculos.json.
+
+db.vehiculos.deleteOne({
+  _id: "VEH011",
+  estado: "Dado de baja"
+});
+
+
+// ============================================================
+// FIN DEL SCRIPT
+// ============================================================
