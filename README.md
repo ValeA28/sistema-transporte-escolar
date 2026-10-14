@@ -496,3 +496,31 @@ Las consultas y operaciones realizadas permitieron comprobar el funcionamiento d
 Se utilizaron consultas de filtrado, operadores de comparación, notación de punto, proyecciones y búsquedas dentro de arreglos. También se realizaron operaciones de actualización y eliminación para comprobar el manejo de los datos.
 
 Las pruebas permitieron verificar que la información puede consultarse y modificarse de acuerdo con las necesidades del sistema, aprovechando las características del modelo orientado a documentos.
+
+
+
+
+
+
+
+# Fase 3: Resiliencia, Transacciones y Securización
+
+## Introducción
+
+En esta fase del proyecto se busca mejorar la disponibilidad, la consistencia y la seguridad de la base de datos del Sistema de Gestión de Transporte Escolar, utilizando las funcionalidades de MongoDB.
+
+El objetivo es pasar de una base de datos utilizada de manera local a una configuración que permita tolerar fallos, mantener la consistencia de las operaciones críticas y controlar el acceso a la información.
+
+Para ello, el trabajo se divide en tres etapas:
+
+1. **Alta disponibilidad:** configurar un Replica Set de MongoDB con tres nodos y comprobar la elección automática de un nuevo nodo principal ante la caída del PRIMARY.
+2. **Transacciones ACID:** implementar transacciones que permitan confirmar operaciones exitosas y revertir los cambios cuando se produzca un error o se incumpla una regla de negocio.
+3. **Seguridad:** habilitar la autenticación de MongoDB y crear usuarios con distintos permisos, aplicando el principio de mínimo privilegio.
+
+## Paso 1: Alta disponibilidad
+
+### Objetivo
+
+Configurar un Replica Set de MongoDB compuesto por un nodo PRIMARY, un nodo SECONDARY y un ARBITER. Posteriormente, comprobar su capacidad de recuperación mediante la interrupción intencional del nodo principal mientras se ejecutan inserciones de documentos.
+
+Esta prueba permite verificar si MongoDB puede elegir automáticamente un nuevo PRIMARY cuando el nodo principal deja de estar disponible.
