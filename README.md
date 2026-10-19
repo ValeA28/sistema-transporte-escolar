@@ -524,3 +524,70 @@ Para ello, el trabajo se divide en tres etapas:
 Configurar un Replica Set de MongoDB compuesto por un nodo PRIMARY, un nodo SECONDARY y un ARBITER. Posteriormente, comprobar su capacidad de recuperación mediante la interrupción intencional del nodo principal mientras se ejecutan inserciones de documentos.
 
 Esta prueba permite verificar si MongoDB puede elegir automáticamente un nuevo PRIMARY cuando el nodo principal deja de estar disponible.
+
+### 1. Configuración del Replica Set
+
+Se modificó el archivo de configuración `mongod.cfg` para habilitar la replicación de MongoDB mediante el conjunto `rs0`. Posteriormente, se reinició el servicio para aplicar los cambios.
+
+<img width="840" height="901" alt="image" src="https://github.com/user-attachments/assets/5ac423b5-3b33-4f22-b286-c53395aeafdb" />
+
+
+### 2. Inicialización del Replica Set
+
+Desde MongoDB Shell (`mongosh`), se ejecutó el comando `rs.initiate()` para inicializar el Replica Set `rs0`, utilizando inicialmente el nodo `127.0.0.1:27017`.
+
+Esta inicialización permitió comenzar a configurar los demás miembros del conjunto.
+
+<img width="975" height="859" alt="image" src="https://github.com/user-attachments/assets/9ca636c7-b9d5-43fe-9c7a-f2b4d962e9e7" />
+
+### 3. Incorporación del Arbiter
+
+Se incorporó una tercera instancia de MongoDB en el puerto `27019`, configurada como Arbiter. Este miembro participa en las elecciones del Replica Set, pero no almacena una copia de los datos de la aplicación.
+
+La incorporación permitió completar la configuración de los tres miembros necesarios para esta práctica.
+<img width="855" height="354" alt="image" src="https://github.com/user-attachments/assets/956ba916-1278-4800-9b0c-c37394ee7e8b" />
+
+### 4. Ejecución del script de inserciones
+
+Se creó el archivo `scripts/failover.js` utilizando Node.js y el controlador de MongoDB.
+
+El script se conecta al Replica Set `rs0` e inserta documentos automáticamente cada tres segundos en la colección `prueba_failover`. Cada documento incluye un identificador, un mensaje, un número y la fecha de inserción.
+
+Este procedimiento permite observar el comportamiento de las operaciones de escritura durante la prueba de alta disponibilidad.
+
+<img width="975" height="433" alt="image" src="https://github.com/user-attachments/assets/25c76d3e-7cc1-408c-ae04-3c7e1365a42d" />
+
+### 5. Simulación de la caída del PRIMARY
+
+Para comprobar la tolerancia a fallos, se detuvo intencionalmente el proceso correspondiente al nodo que ejercía el rol de PRIMARY.
+
+Esta interrupción permitió simular la caída del nodo principal mientras se realizaba la prueba de alta disponibilidad.
+
+<img width="870" height="128" alt="image" src="https://github.com/user-attachments/assets/0b580162-220e-4d72-8d9d-d85e02e58413" />
+
+### 6. Elección automática de un nuevo PRIMARY
+
+Después de detener el nodo principal, se comprobó el estado de la topología mediante el comando `db.hello()`.
+
+El resultado mostró que `127.0.0.1:27018` había asumido el rol de PRIMARY. Esto demuestra que MongoDB realizó una elección automática tras la caída del nodo que ejercía ese rol.
+
+<img width="975" height="914" alt="image" src="https://github.com/user-attachments/assets/a8d74c1c-7d53-44e8-b12e-f9936357de9c" />
+
+
+### 7. Recuperación del nodo
+
+Una vez finalizada la prueba de caída, se volvió a iniciar el nodo `127.0.0.1:27017`.
+
+Mediante `db.hello()` se comprobó que el nodo volvió a formar parte del Replica Set como SECONDARY, mientras que `127.0.0.1:27018` continuó como PRIMARY.
+
+<img width="975" height="843" alt="image" src="https://github.com/user-attachments/assets/8d29dbbc-4a22-4cd5-98e8-f6feb768fb41" />
+
+### 8. Continuidad de las inserciones durante la prueba de alta disponibilidad
+
+Durante la prueba se detuvo intencionalmente el nodo que actuaba como PRIMARY para comprobar la capacidad de recuperación del Replica Set.
+
+En la ejecución del script se observaron algunas interrupciones temporales en las operaciones de escritura, seguidas de nuevas inserciones realizadas correctamente. Esto permitió observar el comportamiento del sistema ante errores durante las operaciones de escritura.
+
+La captura muestra la continuidad de las inserciones y la recuperación de las operaciones después de los errores registrados.
+
+<img width="886" height="382" alt="image" src="https://github.com/user-attachments/assets/5eb18e1d-8603-48fb-8789-93c435941cda" />
