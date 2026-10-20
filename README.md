@@ -591,3 +591,62 @@ En la ejecución del script se observaron algunas interrupciones temporales en l
 La captura muestra la continuidad de las inserciones y la recuperación de las operaciones después de los errores registrados.
 
 <img width="886" height="382" alt="image" src="https://github.com/user-attachments/assets/5eb18e1d-8603-48fb-8789-93c435941cda" />
+
+
+## Paso 2: Transacciones ACID
+
+### Objetivo
+
+Implementar transacciones en MongoDB para garantizar la consistencia de las operaciones críticas del Sistema de Gestión de Transporte Escolar. Se realizaron dos pruebas: una transacción exitosa y otra fallida, utilizando `commitTransaction()` y `abortTransaction()`.
+
+### 1. Proceso seleccionado
+
+Se seleccionó el registro de pagos mensuales de los alumnos como proceso crítico del sistema.
+
+Cuando se registra un pago, también se actualiza la información relacionada con el alumno. Ambas operaciones deben confirmarse conjuntamente para evitar inconsistencias en la información.
+
+Para implementar este comportamiento se creó el archivo `scripts/transacciones.js`, utilizando Node.js y el controlador de MongoDB.
+
+### 2. Conexión al Replica Set
+
+Antes de ejecutar las pruebas, se estableció una conexión con el nodo de MongoDB ubicado en el puerto `27018`, perteneciente al Replica Set `rs0`.
+
+La conexión se realizó mediante MongoDB Shell (`mongosh`). El indicador `rs0 [direct: primary]` confirmó que el nodo estaba actuando como PRIMARY.
+
+Esta conexión permitió ejecutar el script `scripts/transacciones.js` y realizar las pruebas de transacciones ACID.
+
+<img width="1112" height="395" alt="Captura de pantalla 2026-10-19 014403" src="https://github.com/user-attachments/assets/b47bf40d-f4e4-4eb0-806b-0753295cf19f" />
+
+### 3. Transacción exitosa
+
+En la primera prueba se inició una transacción mediante `session.startTransaction()`. Dentro de ella se insertó un pago en la colección `pagos` y se incrementó el campo `pagosRegistrados` del alumno correspondiente.
+
+Finalmente, se ejecutó `commitTransaction()` para confirmar los cambios.
+
+El resultado fue satisfactorio: el programa confirmó que el pago se encontraba guardado en la base de datos y que la actualización del alumno se realizó correctamente.
+
+### 4. Transacción fallida
+
+En la segunda prueba se intentó registrar un pago con monto cero, incumpliendo la regla de negocio que establece que el importe debe ser mayor que cero.
+
+Dentro de la transacción se realizaron dos operaciones: la inserción del pago en la colección `pagos` y la actualización del contador `pagosRegistrados` del alumno.
+
+Luego, el programa detectó el incumplimiento de la regla de negocio y ejecutó `abortTransaction()` para cancelar la transacción.
+
+De esta manera, se revirtieron ambas operaciones: el pago inválido no quedó almacenado y el contador del alumno no se incrementó como consecuencia de la transacción fallida.
+
+### 5. Evidencia de ejecución
+
+La siguiente captura muestra la ejecución de ambas pruebas y la comprobación final de los resultados.
+
+Se verificó que el pago válido quedó guardado (`true`), que el pago inválido no quedó almacenado (`false`) y que el contador del alumno pasó de 1 a 2 debido únicamente a la transacción exitosa de esta ejecución.
+
+<img width="777" height="492" alt="image" src="https://github.com/user-attachments/assets/7a18faf9-9c8e-4210-9c38-2e8a9c287284" />
+
+### 6. Conclusión
+
+Las pruebas permitieron comprobar el funcionamiento de las transacciones de MongoDB en dos escenarios diferentes.
+
+En el escenario exitoso, los cambios se confirmaron mediante `commitTransaction()`. En el escenario fallido, la transacción se canceló mediante `abortTransaction()`, revirtiendo tanto la inserción del pago inválido como la actualización del alumno.
+
+De esta manera, se aplicaron transacciones al proceso de registro de pagos del Sistema de Gestión de Transporte Escolar, evitando que una operación incompleta dejara información inconsistente entre las colecciones.
