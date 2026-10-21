@@ -650,3 +650,64 @@ Las pruebas permitieron comprobar el funcionamiento de las transacciones de Mong
 En el escenario exitoso, los cambios se confirmaron mediante `commitTransaction()`. En el escenario fallido, la transacción se canceló mediante `abortTransaction()`, revirtiendo tanto la inserción del pago inválido como la actualización del alumno.
 
 De esta manera, se aplicaron transacciones al proceso de registro de pagos del Sistema de Gestión de Transporte Escolar, evitando que una operación incompleta dejara información inconsistente entre las colecciones.
+
+
+### 3. Seguridad y autenticación
+
+El objetivo de esta etapa fue proteger la base de datos del Sistema de Gestión de Transporte Escolar mediante la configuración de la autenticación y la creación de usuarios con distintos niveles de permisos.
+
+#### 3.1. Verificación del Replica Set
+
+Se verificó el estado de los tres miembros del Replica Set `rs0`. El resultado mostró los siguientes estados:
+
+- **Nodo 1 (27017):** PRIMARY.
+- **Nodo 2 (27018):** SECONDARY.
+- **Nodo 3 (27019):** ARBITER.
+
+Esta comprobación permitió verificar la configuración y el estado de los miembros del Replica Set.
+
+<img width="886" height="177" alt="image" src="https://github.com/user-attachments/assets/c9d1daac-f72b-4574-9ce2-6d50889388c8" />
+
+
+#### 3.2. Creación de usuarios
+
+Se crearon dos usuarios para administrar el acceso a MongoDB:
+
+- **adminTransporte:** usuario administrador con el rol `root` sobre la base de datos `admin`.
+- **appTransporte:** usuario de aplicación con permisos de lectura y escritura (`readWrite`) únicamente sobre la base de datos `sistema-transporte-escolar`.
+
+Esta separación permite diferenciar las tareas administrativas de las operaciones habituales de la aplicación y limitar los permisos del usuario de aplicación.
+
+<img width="733" height="871" alt="image" src="https://github.com/user-attachments/assets/1525f99b-32d0-4930-8445-0f6262ed4eb8" />
+<img width="536" height="75" alt="image" src="https://github.com/user-attachments/assets/9e041e10-49d2-46f7-b137-5b1de56cf419" />
+
+
+
+#### 3.3. Configuración de seguridad
+
+Se modificó el archivo `mongod.cfg` para configurar el archivo de clave (`keyFile`) y habilitar la autorización mediante la opción `authorization: enabled`.
+
+El archivo de clave permite la autenticación interna entre los miembros del Replica Set, mientras que la autorización permite controlar el acceso a los recursos de MongoDB según los permisos de cada usuario.
+
+Posteriormente, se verificó la configuración activa y la autenticación de los usuarios creados.
+
+<img width="683" height="820" alt="image" src="https://github.com/user-attachments/assets/42863592-ceba-4327-9508-3796b12bf341" />
+
+
+#### 3.4. Prueba de acceso sin autenticación
+
+Para comprobar la seguridad, se intentó consultar un documento de la colección `alumnos` sin autenticar previamente al usuario.
+
+MongoDB rechazó la operación y devolvió el error `Unauthorized: Command find requires authentication`.
+
+Este resultado demuestra que no es posible realizar esa consulta sin las credenciales correspondientes.
+
+<img width="886" height="501" alt="image" src="https://github.com/user-attachments/assets/353e9d05-f03d-4c3f-8729-b127fd1ffb9f" />
+<img width="886" height="210" alt="image" src="https://github.com/user-attachments/assets/059ddb15-5646-4b3f-8419-42a909ed7fc5" />
+
+
+#### 3.5. Conclusión
+
+Las pruebas permitieron verificar el estado de los miembros del Replica Set, la creación de usuarios con diferentes permisos y la configuración de la autenticación y autorización de MongoDB.
+
+Además, se comprobó que el sistema rechaza las consultas cuando no se proporcionan credenciales válidas, contribuyendo a proteger la información almacenada en la base de datos.
