@@ -753,25 +753,31 @@ La prueba permitió observar el mecanismo de elección automática ante la caíd
 
 Se verificó que el nodo `27017` actuaba como PRIMARY, el nodo `27018` como SECONDARY y el nodo `27019` como ARBITER.
 
-[PEGAR AQUÍ LAS DOS PARTES DE LA CAPTURA DEL ESTADO INICIAL]
+<img width="886" height="1021" alt="image" src="https://github.com/user-attachments/assets/d414b7a4-896d-4a5a-86e9-1f030c918e2c" />
+<img width="886" height="1026" alt="image" src="https://github.com/user-attachments/assets/a8c7e2d6-0615-481c-95ab-3b11fdb7c655" />
+
 
 **Ejecución del script de failover:**
 
 Se ejecutó el script `failover.js`, conectado al Replica Set `rs0`, para realizar inserciones cada tres segundos. Esto permitió comprobar el funcionamiento de las inserciones durante la prueba de alta disponibilidad.
 
-[PEGAR AQUÍ LA CAPTURA DE LA EJECUCIÓN DE failover.js]
+<img width="886" height="393" alt="image" src="https://github.com/user-attachments/assets/b3d12a37-7f20-4090-943f-b71a2c403c48" />
+
+
 
 **Detención del nodo principal:**
 
 Se detuvo el proceso correspondiente al nodo principal para simular una falla durante la prueba.
 
-[PEGAR AQUÍ LA CAPTURA DEL COMANDO taskkill]
+<img width="688" height="101" alt="image" src="https://github.com/user-attachments/assets/aa39942a-d3da-4ed5-b563-96a6b441332b" />
+
 
 **Verificación del nuevo nodo principal:**
 
 Después de la caída del nodo principal, se comprobó que el nodo `27018` asumió el rol de PRIMARY, mientras que el nodo `27017` pasó a ser SECONDARY.
 
-[PEGAR AQUÍ LA CAPTURA DE db.hello() QUE MUESTRA EL PRIMARY EN 27018]
+<img width="886" height="765" alt="image" src="https://github.com/user-attachments/assets/a0f48326-17fa-4842-b2fd-2d8344f4ef59" />
+
 
 
 ## 3. Transacciones ACID
@@ -1033,7 +1039,8 @@ ejecutarTransacciones();
 
 La prueba confirmó que el pago válido quedó almacenado y que el pago inválido no se guardó. También se verificó el contador de pagos del alumno.
 
-[PEGAR AQUÍ LA CAPTURA DE LA EJECUCIÓN DEL SCRIPT]
+<img width="777" height="492" alt="Captura de pantalla 2026-10-19 023705" src="https://github.com/user-attachments/assets/627f0427-48be-49d5-b413-7662c11add57" />
+
 
 
 
@@ -1062,25 +1069,29 @@ La separación de roles permite diferenciar las tareas administrativas de las op
 
 Se crearon los usuarios `adminTransporte` y `appTransporte` con roles diferenciados según sus funciones.
 
-[PEGAR AQUÍ LA CAPTURA DE LA CREACIÓN DE LOS DOS USUARIOS]
+<img width="733" height="871" alt="image" src="https://github.com/user-attachments/assets/42ba28d6-fe8d-486e-97f9-25755312ed24" />
+
 
 **Configuración de seguridad:**
 
 Se verificó que MongoDB tuviera habilitadas la autorización y la autenticación interna mediante `keyFile`.
 
-[PEGAR AQUÍ LA CAPTURA DE LA CONFIGURACIÓN DE SEGURIDAD]
+<img width="886" height="501" alt="image" src="https://github.com/user-attachments/assets/e542035f-bfb1-49d6-9a41-a7fc992c88be" />
+
 
 **Verificación del acceso sin autenticación:**
 
 Se comprobó que MongoDB rechazara una consulta a la colección `alumnos` cuando no se proporcionaban credenciales.
 
-[PEGAR AQUÍ LA CAPTURA DEL ERROR Unauthorized]
+<img width="886" height="210" alt="image" src="https://github.com/user-attachments/assets/44adc3e2-045f-48d1-b338-3a6bfad80fcc" />
+
 
 **Estado del Replica Set:**
 
 Se verificó el estado de los nodos de datos y del árbitro con la configuración de seguridad activa.
 
-[PEGAR AQUÍ LA CAPTURA DEL ESTADO DE LOS TRES NODOS]
+<img width="886" height="177" alt="image" src="https://github.com/user-attachments/assets/88da602a-c85e-427b-a471-b43c5750e8ff" />
+
 
 
 
