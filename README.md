@@ -711,3 +711,383 @@ Este resultado demuestra que no es posible realizar esa consulta sin las credenc
 Las pruebas permitieron verificar el estado de los miembros del Replica Set, la creación de usuarios con diferentes permisos y la configuración de la autenticación y autorización de MongoDB.
 
 Además, se comprobó que el sistema rechaza las consultas cuando no se proporcionan credenciales válidas, contribuyendo a proteger la información almacenada en la base de datos.
+
+
+
+## 1. Diagrama de Arquitectura
+
+La arquitectura del Sistema de Gestión de Transporte Escolar utiliza Node.js y MongoDB mediante un Replica Set denominado `rs0`, compuesto por dos nodos de datos y un árbitro.
+
+El nodo PRIMARY recibe las operaciones de lectura y escritura, mientras que el nodo SECONDARY mantiene una réplica de los datos. El nodo ARBITER participa en las elecciones para determinar qué nodo asumirá el rol de PRIMARY ante una falla.
+
+**Configuración inicial:**
+
+- **PRIMARY:** puerto `27017`.
+- **SECONDARY:** puerto `27018`.
+- **ARBITER:** puerto `27019`.
+
+El siguiente diagrama representa la arquitectura implementada y la distribución de los roles.
+
+<img width="442" height="720" alt="Captura de pantalla 2026-10-21 222608" src="https://github.com/user-attachments/assets/bff89604-659d-42dc-b8a8-b57ebc91399b" />
+
+
+
+
+## 2. Bitácora del Failover
+
+Se realizó una prueba de alta disponibilidad sobre el Replica Set `rs0`, compuesto por dos nodos de datos y un árbitro.
+
+**Estado inicial:** el nodo `27017` actuaba como PRIMARY, el nodo `27018` como SECONDARY y el nodo `27019` como ARBITER.
+
+**Caída del nodo principal:** se detuvo el proceso correspondiente al nodo `27017` para simular una falla.
+
+**Elección del nuevo principal:** el nodo `27018` asumió el rol de PRIMARY mediante el mecanismo de elección del Replica Set.
+
+**Verificación:** mediante MongoDB Shell se comprobó que `27018` era el nuevo PRIMARY y que `27017` figuraba como SECONDARY.
+
+La prueba permitió observar el mecanismo de elección automática ante la caída del nodo principal.
+
+**Evidencias de la prueba:**
+
+**Estado inicial del Replica Set:**
+
+Se verificó que el nodo `27017` actuaba como PRIMARY, el nodo `27018` como SECONDARY y el nodo `27019` como ARBITER.
+
+[PEGAR AQUÍ LAS DOS PARTES DE LA CAPTURA DEL ESTADO INICIAL]
+
+**Ejecución del script de failover:**
+
+Se ejecutó el script `failover.js`, conectado al Replica Set `rs0`, para realizar inserciones cada tres segundos. Esto permitió comprobar el funcionamiento de las inserciones durante la prueba de alta disponibilidad.
+
+[PEGAR AQUÍ LA CAPTURA DE LA EJECUCIÓN DE failover.js]
+
+**Detención del nodo principal:**
+
+Se detuvo el proceso correspondiente al nodo principal para simular una falla durante la prueba.
+
+[PEGAR AQUÍ LA CAPTURA DEL COMANDO taskkill]
+
+**Verificación del nuevo nodo principal:**
+
+Después de la caída del nodo principal, se comprobó que el nodo `27018` asumió el rol de PRIMARY, mientras que el nodo `27017` pasó a ser SECONDARY.
+
+[PEGAR AQUÍ LA CAPTURA DE db.hello() QUE MUESTRA EL PRIMARY EN 27018]
+
+
+## 3. Transacciones ACID
+
+Se seleccionó el registro de pagos mensuales como proceso crítico del Sistema de Gestión de Transporte Escolar, ya que requiere mantener la consistencia entre las colecciones `pagos` y `alumnos`.
+
+**Código de la transacción:**
+
+Se creó el archivo `scripts/transacciones.js` utilizando Node.js y el controlador de MongoDB. El script implementa dos pruebas para demostrar el funcionamiento de las transacciones ACID.
+
+**Transacción exitosa:** se registra un pago y se actualiza el contador de pagos del alumno. Los cambios se confirman mediante `commitTransaction()`.
+
+**Transacción fallida:** se intenta registrar un pago con monto cero, incumpliendo la regla de negocio que establece que el importe debe ser mayor que cero. El error activa `abortTransaction()`, cancelando los cambios realizados durante la transacción.
+
+**Código comentado del script:**
+
+// Importar MongoClient para conectarse a MongoDB.
+const { MongoClient } = require("mongodb");
+
+// URI de conexión al Replica Set rs0.
+// Se indican los tres miembros para permitir la conexión
+// al Replica Set aunque cambie el nodo PRIMARY.
+const uri = "mongodb://127.0.0.1:27017,127.0.0.1:27018,127.0.0.1:27019/?replicaSet=rs0";
+
+// Crear el cliente que permitirá conectarse a MongoDB.
+const client = new MongoClient(uri);
+
+// Función principal que ejecuta las pruebas de transacciones ACID.
+async function ejecutarTransacciones() {
+    try {
+        // Establecer la conexión con el Replica Set.
+        await client.connect();
+
+        console.log("Conectado al Replica Set rs0");
+
+        // Seleccionar la base de datos del proyecto.
+        const db = client.db("sistema-transporte-escolar");
+
+        // Obtener las colecciones que participan en las transacciones.
+        const pagos = db.collection("pagos");
+        const alumnos = db.collection("alumnos");
+
+        // ==========================================
+        // PRUEBA 1: TRANSACCIÓN EXITOSA
+        // ==========================================
+
+        // Crear una sesión para agrupar las operaciones
+        // que deben confirmarse como parte de una misma transacción.
+        const sessionExitosa = client.startSession();
+
+        try {
+            console.log("\n--- PRUEBA 1: TRANSACCIÓN EXITOSA ---");
+
+            // Iniciar la transacción dentro de la sesión.
+            // Las operaciones asociadas a esta sesión se ejecutan
+            // dentro de la transacción hasta confirmar o cancelar.
+            sessionExitosa.startTransaction();
+
+            // Preparar los datos del pago que se va a registrar.
+            const pago = {
+                _id: "PAG-ACID-003",
+                responsable_id: "RES001",
+                alumno_id: "ALU001",
+                periodo: "Diciembre 2026",
+                monto: 95000,
+                fechaPago: new Date(),
+                metodoPago: "Transferencia",
+                estado: "Pagado"
+            };
+
+            // Operación 1: insertar el pago dentro de la transacción.
+            // La opción session vincula la operación a la sesión activa.
+            await pagos.insertOne(pago, {
+                session: sessionExitosa
+            });
+
+            // Operación 2: incrementar el contador de pagos del alumno.
+            // Se utiliza la misma sesión para que ambas operaciones
+            // pertenezcan a la misma transacción.
+            await alumnos.updateOne(
+                { _id: "ALU001" },
+                {
+                    $inc: {
+                        pagosRegistrados: 1
+                    }
+                },
+                {
+                    session: sessionExitosa,
+                    upsert: false
+                }
+            );
+
+            // Confirmar la transacción.
+            // Si ambas operaciones se ejecutaron correctamente,
+            // los cambios se confirman conjuntamente.
+            await sessionExitosa.commitTransaction();
+
+            console.log("Pago registrado correctamente.");
+            console.log("Cambios confirmados con commitTransaction().");
+
+        } catch (error) {
+            // Si ocurre un error antes de confirmar la transacción,
+            // intentar cancelar sus operaciones pendientes.
+            await sessionExitosa.abortTransaction();
+
+            console.log(
+                "Error en la transacción exitosa:",
+                error.message
+            );
+            console.log("Se cancelaron los cambios.");
+
+        } finally {
+            // Cerrar la sesión independientemente de si la prueba
+            // terminó correctamente o se produjo un error.
+            await sessionExitosa.endSession();
+        }
+
+        // ==========================================
+        // PRUEBA 2: TRANSACCIÓN FALLIDA
+        // ==========================================
+
+        // Crear una sesión independiente para la segunda prueba.
+        // De este modo, la transacción fallida no comparte
+        // su sesión con la transacción exitosa.
+        const sessionFallida = client.startSession();
+
+        try {
+            console.log("\n--- PRUEBA 2: TRANSACCIÓN FALLIDA ---");
+
+            // Iniciar la segunda transacción.
+            sessionFallida.startTransaction();
+
+            // Preparar un pago inválido para comprobar
+            // el cumplimiento de la regla de negocio.
+            const pagoInvalido = {
+                _id: "PAG-ACID-004",
+                responsable_id: "RES001",
+                alumno_id: "ALU001",
+                periodo: "Enero 2027",
+                monto: 0,
+                fechaPago: new Date(),
+                metodoPago: "Transferencia",
+                estado: "Pagado"
+            };
+
+            // Operación 1: insertar el pago dentro de la transacción.
+            // La inserción todavía no está confirmada definitivamente.
+            await pagos.insertOne(pagoInvalido, {
+                session: sessionFallida
+            });
+
+            // Operación 2: actualizar el contador del alumno
+            // utilizando la misma sesión de la transacción.
+            await alumnos.updateOne(
+                { _id: "ALU001" },
+                {
+                    $inc: {
+                        pagosRegistrados: 1
+                    }
+                },
+                {
+                    session: sessionFallida,
+                    upsert: false
+                }
+            );
+
+            // Validar la regla de negocio después de las operaciones.
+            // El monto debe ser mayor que cero para aceptar el pago.
+            if (pagoInvalido.monto <= 0) {
+                // Lanzar un error para interrumpir el proceso
+                // y ejecutar el bloque catch.
+                throw new Error(
+                    "El monto del pago debe ser mayor que cero."
+                );
+            }
+
+            // Confirmar únicamente si las operaciones terminaron
+            // correctamente y se cumplieron las reglas de negocio.
+            await sessionFallida.commitTransaction();
+
+        } catch (error) {
+            // Ante el error, cancelar las operaciones de la transacción.
+            // Esto revierte tanto la inserción del pago como
+            // la actualización del contador del alumno.
+            await sessionFallida.abortTransaction();
+
+            console.log("Error esperado:", error.message);
+            console.log(
+                "Transacción cancelada con abortTransaction()."
+            );
+            console.log(
+                "El pago y la actualización del alumno fueron revertidos."
+            );
+
+        } finally {
+            // Liberar la sesión de la segunda transacción,
+            // tanto si terminó correctamente como si falló.
+            await sessionFallida.endSession();
+        }
+
+        // ==========================================
+        // COMPROBACIÓN FINAL
+        // ==========================================
+
+        // Consultar si el pago válido quedó almacenado.
+        console.log("\n--- COMPROBACIÓN FINAL ---");
+
+        const pagoExitoso = await pagos.findOne({
+            _id: "PAG-ACID-003"
+        });
+
+        // Consultar si el pago inválido quedó almacenado.
+        const pagoFallido = await pagos.findOne({
+            _id: "PAG-ACID-004"
+        });
+
+        // Consultar el contador de pagos del alumno.
+        const alumno = await alumnos.findOne(
+            { _id: "ALU001" },
+            {
+                projection: {
+                    pagosRegistrados: 1
+                }
+            }
+        );
+
+        // Mostrar los resultados de las comprobaciones.
+        console.log(
+            "Pago exitoso guardado:",
+            pagoExitoso !== null
+        );
+
+        console.log(
+            "Pago fallido guardado:",
+            pagoFallido !== null
+        );
+
+        console.log(
+            "Contador de pagos del alumno:",
+            alumno?.pagosRegistrados ?? "Campo no existente"
+        );
+
+    } catch (error) {
+        // Capturar errores generales, por ejemplo,
+        // problemas al conectarse o acceder a la base de datos.
+        console.error("Error general:", error.message);
+
+    } finally {
+        // Cerrar la conexión del cliente al finalizar el proceso,
+        // incluso si se produce un error general.
+        await client.close();
+    }
+}
+
+// Ejecutar la función principal.
+ejecutarTransacciones();
+
+**Evidencia de ejecución:**
+
+La prueba confirmó que el pago válido quedó almacenado y que el pago inválido no se guardó. También se verificó el contador de pagos del alumno.
+
+[PEGAR AQUÍ LA CAPTURA DE LA EJECUCIÓN DEL SCRIPT]
+
+
+
+## 4. Reporte de Securización
+
+Se configuró MongoDB para controlar el acceso a la base de datos mediante autenticación y autorización.
+
+**Configuración de seguridad:** se modificó el archivo `mongod.cfg` para configurar el `keyFile` y habilitar la opción `authorization: enabled`. El archivo de clave permite la autenticación interna entre los miembros del Replica Set.
+
+**Usuarios creados:**
+
+- **adminTransporte:** usuario administrador con el rol `root` sobre la base de datos `admin`.
+- **appTransporte:** usuario de aplicación con el rol `readWrite` sobre la base de datos `sistema-transporte-escolar`.
+
+La separación de roles permite diferenciar las tareas administrativas de las operaciones habituales de la aplicación.
+
+**Verificación de seguridad:** se comprobó la configuración activa y la autenticación de los usuarios creados.
+
+**Prueba de acceso sin autenticación:** se intentó consultar un documento de la colección `alumnos` sin autenticarse previamente. MongoDB rechazó la operación con el error `Unauthorized: Command find requires authentication`.
+
+**Justificación de seguridad:** habilitar la autorización reduce los riesgos asociados a configuraciones que permiten el acceso sin autenticación. La separación de roles limita los privilegios de la aplicación, mientras que el `keyFile` permite autenticar las comunicaciones internas entre los miembros del Replica Set.
+
+**Evidencias de seguridad:**
+
+**Creación de usuarios:**
+
+Se crearon los usuarios `adminTransporte` y `appTransporte` con roles diferenciados según sus funciones.
+
+[PEGAR AQUÍ LA CAPTURA DE LA CREACIÓN DE LOS DOS USUARIOS]
+
+**Configuración de seguridad:**
+
+Se verificó que MongoDB tuviera habilitadas la autorización y la autenticación interna mediante `keyFile`.
+
+[PEGAR AQUÍ LA CAPTURA DE LA CONFIGURACIÓN DE SEGURIDAD]
+
+**Verificación del acceso sin autenticación:**
+
+Se comprobó que MongoDB rechazara una consulta a la colección `alumnos` cuando no se proporcionaban credenciales.
+
+[PEGAR AQUÍ LA CAPTURA DEL ERROR Unauthorized]
+
+**Estado del Replica Set:**
+
+Se verificó el estado de los nodos de datos y del árbitro con la configuración de seguridad activa.
+
+[PEGAR AQUÍ LA CAPTURA DEL ESTADO DE LOS TRES NODOS]
+
+
+
+## 5. Conclusión
+
+En esta fase se trabajó sobre la alta disponibilidad de MongoDB, la consistencia de las operaciones mediante transacciones y la protección de la base de datos mediante autenticación y autorización.
+
+Las pruebas permitieron comprobar la elección de un nuevo PRIMARY ante la caída del nodo principal, ejecutar transacciones exitosas y fallidas y verificar que MongoDB rechaza consultas realizadas sin autenticación.
+
+De esta manera, se documentaron las medidas de resiliencia, consistencia y seguridad aplicadas al Sistema de Gestión de Transporte Escolar.
