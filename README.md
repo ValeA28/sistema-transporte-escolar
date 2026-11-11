@@ -1061,7 +1061,9 @@ La separación de roles permite diferenciar las tareas administrativas de las op
 
 **Prueba de acceso sin autenticación:** se intentó consultar un documento de la colección `alumnos` sin autenticarse previamente. MongoDB rechazó la operación con el error `Unauthorized: Command find requires authentication`.
 
-**Justificación de seguridad:** habilitar la autorización reduce los riesgos asociados a configuraciones que permiten el acceso sin autenticación. La separación de roles limita los privilegios de la aplicación, mientras que el `keyFile` permite autenticar las comunicaciones internas entre los miembros del Replica Set.
+**Justificación de seguridad:** Los ataques de secuestro de datos a MongoDB se aprovecharon de instalaciones con la configuración por defecto, que no exige usuario ni contraseña. Para evitarlo, en este proyecto se habilitó `authorization: enabled`, por lo que toda operación requiere autenticación. Esto se comprobó al intentar consultar la colección `alumnos` sin credenciales: MongoDB rechazó la consulta con el error `Unauthorized`.
+
+Además, se crearon dos usuarios con roles distintos. `adminTransporte` se utiliza para tareas administrativas y `appTransporte` tiene permisos de lectura y escritura únicamente sobre la base `sistema-transporte-escolar`, siguiendo el principio de mínimo privilegio. Por último, el `keyFile` permite que los nodos del Replica Set se autentiquen entre sí.
 
 **Evidencias de seguridad:**
 
