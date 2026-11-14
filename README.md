@@ -659,7 +659,7 @@ En el escenario exitoso, los cambios se confirmaron mediante `commitTransaction(
 De esta manera, se aplicaron transacciones al proceso de registro de pagos del Sistema de Gestión de Transporte Escolar, evitando que una operación incompleta dejara información inconsistente entre las colecciones.
 
 
-### 3. Seguridad y autenticación
+## 3. Seguridad y autenticación
 
 El objetivo de esta etapa fue proteger la base de datos del Sistema de Gestión de Transporte Escolar mediante la configuración de la autenticación y la creación de usuarios con distintos niveles de permisos.
 
@@ -802,8 +802,10 @@ Se creó el archivo `scripts/transacciones.js` utilizando Node.js y el controlad
 
 **Transacción fallida:** se intenta registrar un pago con monto cero, incumpliendo la regla de negocio que establece que el importe debe ser mayor que cero. El error activa `abortTransaction()`, cancelando los cambios realizados durante la transacción.
 
+
 **Código comentado del script:**
 
+```javascript
 // Importar MongoClient para conectarse a MongoDB.
 const { MongoClient } = require("mongodb");
 
@@ -1044,8 +1046,10 @@ async function ejecutarTransacciones() {
 
 // Ejecutar la función principal.
 ejecutarTransacciones();
+```
 
 **Evidencia de ejecución:**
+
 
 La prueba confirmó que el pago válido quedó almacenado y que el pago inválido no se guardó. También se verificó el contador de pagos del alumno.
 
