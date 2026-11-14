@@ -555,7 +555,8 @@ El script se conecta al Replica Set `rs0` e inserta documentos automáticamente 
 
 Este procedimiento permite observar el comportamiento de las operaciones de escritura durante la prueba de alta disponibilidad.
 
-<img width="975" height="433" alt="image" src="https://github.com/user-attachments/assets/25c76d3e-7cc1-408c-ae04-3c7e1365a42d" />
+<img width="755" height="383" alt="Captura de pantalla 2026-11-12 035634" src="https://github.com/user-attachments/assets/246b8090-ebaa-43e4-8266-b511e1c57715" />
+
 
 ### 5. Simulación de la caída del PRIMARY
 
@@ -563,7 +564,8 @@ Para comprobar la tolerancia a fallos, se detuvo intencionalmente el proceso cor
 
 Esta interrupción permitió simular la caída del nodo principal mientras se realizaba la prueba de alta disponibilidad.
 
-<img width="870" height="128" alt="image" src="https://github.com/user-attachments/assets/0b580162-220e-4d72-8d9d-d85e02e58413" />
+<img width="416" height="66" alt="Captura de pantalla 2026-11-12 040808" src="https://github.com/user-attachments/assets/4f5c9616-ab54-4865-9677-2c0cf92c7332" />
+
 
 ### 6. Elección automática de un nuevo PRIMARY
 
@@ -571,7 +573,8 @@ Después de detener el nodo principal, se comprobó el estado de la topología m
 
 El resultado mostró que `127.0.0.1:27018` había asumido el rol de PRIMARY. Esto demuestra que MongoDB realizó una elección automática tras la caída del nodo que ejercía ese rol.
 
-<img width="975" height="914" alt="image" src="https://github.com/user-attachments/assets/a8d74c1c-7d53-44e8-b12e-f9936357de9c" />
+<img width="922" height="863" alt="Captura de pantalla 2026-11-12 040001(1)" src="https://github.com/user-attachments/assets/c8628bf2-01de-44fa-83cf-a8745b11eecd" />
+
 
 
 ### 7. Recuperación del nodo
@@ -580,17 +583,21 @@ Una vez finalizada la prueba de caída, se volvió a iniciar el nodo `127.0.0.1:
 
 Mediante `db.hello()` se comprobó que el nodo volvió a formar parte del Replica Set como SECONDARY, mientras que `127.0.0.1:27018` continuó como PRIMARY.
 
-<img width="975" height="843" alt="image" src="https://github.com/user-attachments/assets/8d29dbbc-4a22-4cd5-98e8-f6feb768fb41" />
+<img width="914" height="907" alt="Captura de pantalla 2026-11-12 040542" src="https://github.com/user-attachments/assets/3f4084e0-28be-44a1-ac5f-4527697c3814" />
+
 
 ### 8. Continuidad de las inserciones durante la prueba de alta disponibilidad
 
 Durante la prueba se detuvo intencionalmente el nodo que actuaba como PRIMARY para comprobar la capacidad de recuperación del Replica Set.
 
-En la ejecución del script se observaron algunas interrupciones temporales en las operaciones de escritura, seguidas de nuevas inserciones realizadas correctamente. Esto permitió observar el comportamiento del sistema ante errores durante las operaciones de escritura.
+En la ejecución del script se observó una interrupción temporal de unos 16 segundos, mientras se realizaba la elección del nuevo PRIMARY. Durante ese lapso el script informó que no había un PRIMARY disponible y reintentó la misma inserción. Una vez elegido el nodo `27018`, las inserciones continuaron con numeración consecutiva, sin pérdida ni duplicación de documentos.
 
-La captura muestra la continuidad de las inserciones y la recuperación de las operaciones después de los errores registrados.
+La captura muestra la última inserción antes de la caída (la número 38), los avisos de espera durante la elección y la continuidad de las inserciones a partir de la número 39.
 
-<img width="886" height="382" alt="image" src="https://github.com/user-attachments/assets/5eb18e1d-8603-48fb-8789-93c435941cda" />
+El script confirma cada escritura en el PRIMARY (`w: 1`). En un Replica Set con árbitro, cuando cae un nodo de datos solo queda uno con datos, y una escritura que exigiera confirmación de la mayoría quedaría en espera. Esta limitación se observó en `majorityWriteDate`, que quedó detenido hasta que el nodo caído volvió a unirse.
+
+<img width="692" height="592" alt="Captura de pantalla 2026-11-12 035813" src="https://github.com/user-attachments/assets/dad5f23a-0fa5-4ac1-ae17-8c8867608240" />
+
 
 
 ## Paso 2: Transacciones ACID
@@ -761,7 +768,8 @@ Se verificó que el nodo `27017` actuaba como PRIMARY, el nodo `27018` como SECO
 
 Se ejecutó el script `failover.js`, conectado al Replica Set `rs0`, para realizar inserciones cada tres segundos. Esto permitió comprobar el funcionamiento de las inserciones durante la prueba de alta disponibilidad.
 
-<img width="886" height="393" alt="image" src="https://github.com/user-attachments/assets/b3d12a37-7f20-4090-943f-b71a2c403c48" />
+<img width="755" height="383" alt="Captura de pantalla 2026-11-12 035634" src="https://github.com/user-attachments/assets/0f067616-56a5-4886-b96a-dc673374dc25" />
+
 
 
 
@@ -769,14 +777,16 @@ Se ejecutó el script `failover.js`, conectado al Replica Set `rs0`, para realiz
 
 Se detuvo el proceso correspondiente al nodo principal para simular una falla durante la prueba.
 
-<img width="688" height="101" alt="image" src="https://github.com/user-attachments/assets/aa39942a-d3da-4ed5-b563-96a6b441332b" />
+<img width="416" height="66" alt="Captura de pantalla 2026-11-12 040808" src="https://github.com/user-attachments/assets/504e58f2-e2cc-437d-8fd7-157fcf3e9e68" />
+
 
 
 **Verificación del nuevo nodo principal:**
 
 Después de la caída del nodo principal, se comprobó que el nodo `27018` asumió el rol de PRIMARY, mientras que el nodo `27017` pasó a ser SECONDARY.
 
-<img width="886" height="765" alt="image" src="https://github.com/user-attachments/assets/a0f48326-17fa-4842-b2fd-2d8344f4ef59" />
+<img width="914" height="907" alt="Captura de pantalla 2026-11-12 040542" src="https://github.com/user-attachments/assets/3706b767-9a71-413c-9416-a787f7d7a6cb" />
+
 
 
 
