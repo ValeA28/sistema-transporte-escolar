@@ -1,0 +1,24 @@
+{
+  "name": "sistema-transporte-escolar",
+  "version": "1.0.0",
+  "description": "El proyecto consiste en el diseño de un sistema de gestión para un servicio de transporte escolar. El sistema busca centralizar la información básica de alumnos, responsables, conductores, vehículos, horarios y pagos.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ValeA28/sistema-transporte-escolar.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ValeA28/sistema-transporte-escolar/issues"
+  },
+  "homepage": "https://github.com/ValeA28/sistema-transporte-escolar#readme",
+  "dependencies": {
+    "mongodb": "^7.9.0"
+  }
+}
