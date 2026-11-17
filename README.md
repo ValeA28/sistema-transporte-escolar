@@ -468,19 +468,24 @@ El operador `$inc` incrementa el valor numérico indicado. Como `viajesRealizado
 
 Permite eliminar un registro específico que ya no debe formar parte de la colección, utilizando un criterio de filtrado estricto para evitar eliminar otros documentos.
 
-Para realizar esta prueba se utilizó temporalmente el vehículo `VEH011`, marcado como `"Dado de baja"`.
+Para esta prueba se utilizó el vehículo `VEH011`, marcado como `"Dado de baja"`, que está incluido en el archivo `vehiculos.json`.
 
 **Código MQL:**
 
 ```javascript
-db.vehiculos.deleteOne({
-  _id: "VEH011",
-  estado: "Dado de baja"
-})
+db.vehiculos.find({ _id: "VEH011", estado: "Dado de baja" });
+db.vehiculos.countDocuments({ _id: "VEH011", estado: "Dado de baja" });
+db.vehiculos.deleteOne({ _id: "VEH011", estado: "Dado de baja" });
+db.vehiculos.countDocuments({ _id: "VEH011" });
 ```
 
 La eliminación utiliza dos condiciones: el identificador del vehículo y su estado. De esta manera, solamente se elimina el documento que cumple ambas condiciones.
 
+Antes de eliminar, se verificó con `find` y `countDocuments` que el filtro coincide con un único documento. Después de eliminar, se comprobó que el documento ya no existe.
+
+**Resultado de la ejecución:**
+
+La captura muestra el documento encontrado, el conteo previo de `1`, la eliminación (`deletedCount: 1`) y el conteo final de `0`.
 **Resultado de la ejecución:**
 
 <img width="312" height="532" alt="Captura de pantalla 2026-09-22 002630" src="https://github.com/user-attachments/assets/a595b6a4-0abd-4967-8d67-91b5308bd23b" />
