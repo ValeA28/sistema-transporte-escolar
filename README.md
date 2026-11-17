@@ -811,16 +811,55 @@ Se creó el archivo `scripts/transacciones.js` utilizando Node.js y el controlad
 **Código comentado del script:**
 
 ```javascript
+// Script de transacciones ACID: registro de pagos mensuales.
+// Prueba dos escenarios sobre el Replica Set rs0:
+//   1. Transacción exitosa: se registra un pago y se actualiza el contador
+//      de pagos del alumno. Ambos cambios se confirman juntos (commit).
+//   2. Transacción fallida: se intenta registrar un pago con monto cero.
+//      Se viola una regla de negocio y se cancelan todos los cambios (abort).
+// Antes y después de cada escenario se muestra el estado de los datos.
+
 // Importar MongoClient para conectarse a MongoDB.
 const { MongoClient } = require("mongodb");
+
+// Credenciales del usuario de aplicación: se leen de variables de entorno
+// para no escribir contraseñas en el código.
+//   PowerShell:  $env:MONGO_USER="appTransporte"
+//                $env:MONGO_PASS="tu_clave"
+const usuario = process.env.MONGO_USER;
+const clave = process.env.MONGO_PASS;
+const credenciales = usuario
+    ? `${encodeURIComponent(usuario)}:${encodeURIComponent(clave)}@`
+    : "";
+const authSource = usuario ? "&authSource=sistema-transporte-escolar" : "";
 
 // URI de conexión al Replica Set rs0.
 // Se indican los tres miembros para permitir la conexión
 // al Replica Set aunque cambie el nodo PRIMARY.
-const uri = "mongodb://127.0.0.1:27017,127.0.0.1:27018,127.0.0.1:27019/?replicaSet=rs0";
+const uri =
+    `mongodb://${credenciales}127.0.0.1:27017,127.0.0.1:27018,127.0.0.1:27019` +
+    `/sistema-transporte-escolar?replicaSet=rs0${authSource}`;
 
 // Crear el cliente que permitirá conectarse a MongoDB.
-const client = new MongoClient(uri);
+const client = new MongoClient(uri, { serverSelectionTimeoutMS: 5000 });
+
+// Muestra el estado de los datos relacionados con un pago:
+// si el pago existe y cuánto vale el contador de pagos del alumno.
+// Devuelve el valor del contador (si el campo todavía no existe, vale 0).
+async function mostrarEstado(titulo, pagos, alumnos, idPago) {
+    const pago = await pagos.findOne({ _id: idPago });
+    const alumno = await alumnos.findOne(
+        { _id: "ALU001" },
+        { projection: { pagosRegistrados: 1 } }
+    );
+    const contador = alumno?.pagosRegistrados ?? 0;
+
+    console.log(`${titulo}:`);
+    console.log(`  Pago ${idPago} guardado:`, pago !== null);
+    console.log("  Contador de pagos del alumno ALU001:", contador);
+
+    return contador;
+}
 
 // Función principal que ejecuta las pruebas de transacciones ACID.
 async function ejecutarTransacciones() {
@@ -837,17 +876,32 @@ async function ejecutarTransacciones() {
         const pagos = db.collection("pagos");
         const alumnos = db.collection("alumnos");
 
+        // Identificadores únicos para esta ejecución.
+        // Así el script se puede repetir sin chocar con los pagos
+        // creados en ejecuciones anteriores.
+        const corrida = Date.now();
+        const idPagoExitoso = `PAG-ACID-${corrida}-1`;
+        const idPagoInvalido = `PAG-ACID-${corrida}-2`;
+
         // ==========================================
         // PRUEBA 1: TRANSACCIÓN EXITOSA
         // ==========================================
+
+        console.log("\n--- PRUEBA 1: TRANSACCIÓN EXITOSA ---");
+
+        // Estado de los datos antes de la transacción.
+        const contadorInicial = await mostrarEstado(
+            "Estado ANTES",
+            pagos,
+            alumnos,
+            idPagoExitoso
+        );
 
         // Crear una sesión para agrupar las operaciones
         // que deben confirmarse como parte de una misma transacción.
         const sessionExitosa = client.startSession();
 
         try {
-            console.log("\n--- PRUEBA 1: TRANSACCIÓN EXITOSA ---");
-
             // Iniciar la transacción dentro de la sesión.
             // Las operaciones asociadas a esta sesión se ejecutan
             // dentro de la transacción hasta confirmar o cancelar.
@@ -855,7 +909,7 @@ async function ejecutarTransacciones() {
 
             // Preparar los datos del pago que se va a registrar.
             const pago = {
-                _id: "PAG-ACID-003",
+                _id: idPagoExitoso,
                 responsable_id: "RES001",
                 alumno_id: "ALU001",
                 periodo: "Diciembre 2026",
@@ -912,9 +966,27 @@ async function ejecutarTransacciones() {
             await sessionExitosa.endSession();
         }
 
+        // Estado de los datos después de la transacción exitosa.
+        await mostrarEstado(
+            "Estado DESPUÉS",
+            pagos,
+            alumnos,
+            idPagoExitoso
+        );
+
         // ==========================================
         // PRUEBA 2: TRANSACCIÓN FALLIDA
         // ==========================================
+
+        console.log("\n--- PRUEBA 2: TRANSACCIÓN FALLIDA ---");
+
+        // Estado de los datos antes de la transacción fallida.
+        await mostrarEstado(
+            "Estado ANTES",
+            pagos,
+            alumnos,
+            idPagoInvalido
+        );
 
         // Crear una sesión independiente para la segunda prueba.
         // De este modo, la transacción fallida no comparte
@@ -922,15 +994,13 @@ async function ejecutarTransacciones() {
         const sessionFallida = client.startSession();
 
         try {
-            console.log("\n--- PRUEBA 2: TRANSACCIÓN FALLIDA ---");
-
             // Iniciar la segunda transacción.
             sessionFallida.startTransaction();
 
             // Preparar un pago inválido para comprobar
             // el cumplimiento de la regla de negocio.
             const pagoInvalido = {
-                _id: "PAG-ACID-004",
+                _id: idPagoInvalido,
                 responsable_id: "RES001",
                 alumno_id: "ALU001",
                 periodo: "Enero 2027",
@@ -995,46 +1065,26 @@ async function ejecutarTransacciones() {
             await sessionFallida.endSession();
         }
 
+        // Estado de los datos después de la transacción fallida.
+        const contadorFinal = await mostrarEstado(
+            "Estado DESPUÉS",
+            pagos,
+            alumnos,
+            idPagoInvalido
+        );
+
         // ==========================================
-        // COMPROBACIÓN FINAL
+        // RESUMEN FINAL
         // ==========================================
 
-        // Consultar si el pago válido quedó almacenado.
-        console.log("\n--- COMPROBACIÓN FINAL ---");
-
-        const pagoExitoso = await pagos.findOne({
-            _id: "PAG-ACID-003"
-        });
-
-        // Consultar si el pago inválido quedó almacenado.
-        const pagoFallido = await pagos.findOne({
-            _id: "PAG-ACID-004"
-        });
-
-        // Consultar el contador de pagos del alumno.
-        const alumno = await alumnos.findOne(
-            { _id: "ALU001" },
-            {
-                projection: {
-                    pagosRegistrados: 1
-                }
-            }
-        );
-
-        // Mostrar los resultados de las comprobaciones.
+        // El contador debe haber aumentado en 1 por la transacción
+        // exitosa, y la transacción fallida no debe haber cambiado nada.
+        console.log("\n--- RESUMEN FINAL ---");
+        console.log("Contador al inicio:", contadorInicial);
+        console.log("Contador al final:", contadorFinal);
         console.log(
-            "Pago exitoso guardado:",
-            pagoExitoso !== null
-        );
-
-        console.log(
-            "Pago fallido guardado:",
-            pagoFallido !== null
-        );
-
-        console.log(
-            "Contador de pagos del alumno:",
-            alumno?.pagosRegistrados ?? "Campo no existente"
+            "Aumento del contador:",
+            contadorFinal - contadorInicial
         );
 
     } catch (error) {
