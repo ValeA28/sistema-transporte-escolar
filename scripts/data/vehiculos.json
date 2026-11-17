@@ -78,5 +78,13 @@
     "patente": "AK234WX",
     "capacidad": 20,
     "estado": "Activo"
+  },
+  {
+    "_id": "VEH011",
+    "marca": "Renault",
+    "modelo": "Master",
+    "patente": "AL567YZ",
+    "capacidad": 16,
+    "estado": "Dado de baja"
   }
 ]

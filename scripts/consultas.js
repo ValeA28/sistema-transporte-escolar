@@ -1,13 +1,13 @@
 // ============================================================
 // SISTEMA DE GESTIÓN DE TRANSPORTE ESCOLAR
-// FASE 2 - IMPLEMENTACIÓN, SEMBRADO DE DATOS Y CONSULTAS MQL
+//  CONSULTAS MQL (SECCIÓN 6)
 // ============================================================
 
 use("sistema-transporte-escolar");
 
 
 // ============================================================
-// PASO 3 - CONSULTAS DE LECTURA
+// CONSULTAS DE LECTURA
 // ============================================================
 
 
@@ -136,7 +136,7 @@ db.alumnos.find({
 
 
 // ============================================================
-// PASO 4 - OPERACIONES DE ESCRITURA
+// OPERACIONES DE ESCRITURA
 // ============================================================
 
 
@@ -213,29 +213,37 @@ db.vehiculos.updateOne(
 // ------------------------------------------------------------
 
 // Problema de negocio:
-// El sistema debe permitir eliminar un vehículo que ya
-// no se encuentra disponible para prestar el servicio.
+// El sistema debe permitir eliminar un vehículo que ya no
+// se encuentra disponible para prestar el servicio.
 //
-// Para realizar la prueba de eliminación se utilizó
-// temporalmente el vehículo VEH011, cuyo estado es
-// "Dado de baja".
+// Se utiliza el vehículo VEH011, cuyo estado es "Dado de baja".
+// Es un documento de prueba incluido en vehiculos.json para
+// poder demostrar esta operación.
 //
-// Se utiliza deleteOne para eliminar un único documento.
-//
-// La condición de búsqueda contiene DOS criterios:
+// La condición de borrado contiene DOS criterios:
 // 1. El _id debe ser exactamente "VEH011".
 // 2. El estado debe ser exactamente "Dado de baja".
 //
-// Esto permite realizar una eliminación específica y evita
-// eliminar accidentalmente otro vehículo.
+// Esto evita eliminar por error otro vehículo.
 //
-// VEH011 fue utilizado únicamente como documento de prueba
-// para esta operación y no forma parte de los datos iniciales
-// de vehiculos.json.
+// Antes de borrar se verifica con countDocuments que el filtro
+// coincide con un único documento.
 
+// Verificación previa: debe devolver 1.
+db.vehiculos.countDocuments({
+  _id: "VEH011",
+  estado: "Dado de baja"
+});
+
+// Eliminación.
 db.vehiculos.deleteOne({
   _id: "VEH011",
   estado: "Dado de baja"
+});
+
+// Verificación posterior: debe devolver 0.
+db.vehiculos.countDocuments({
+  _id: "VEH011"
 });
 
 
