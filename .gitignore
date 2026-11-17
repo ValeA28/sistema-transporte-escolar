@@ -2,3 +2,4 @@ node_modules/
 keyfile
 *.key
 .env
+rs0-data/
